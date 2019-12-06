@@ -3,7 +3,7 @@ package ru.rosbank.hackathon.bonusSystem.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.rosbank.hackathon.bonusSystem.dto.TransactionDto;
+import ru.rosbank.hackathon.bonusSystem.dto.Transaction;
 import ru.rosbank.hackathon.bonusSystem.entity.TransactionEntity;
 import ru.rosbank.hackathon.bonusSystem.repository.TransactionRepository;
 
@@ -21,14 +21,14 @@ public class TransactionService {
     }
 
     @Transactional
-    public TransactionDto create(TransactionDto transaction) {
+    public Transaction create(Transaction transaction) {
         TransactionEntity transactionEntity = transaction.toEntity();
         TransactionEntity created = transactionRepository.save(transactionEntity);
         return created.toDto();
     }
 
     @Transactional(readOnly = true)
-    public List<TransactionDto> getAll() {
+    public List<Transaction> getAll() {
         List<TransactionEntity> transactions = transactionRepository.findAll();
         return transactions.stream()
                 .map(TransactionEntity::toDto)

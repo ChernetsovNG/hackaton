@@ -9,7 +9,7 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Data
-public class TransactionDto {
+public class Transaction {
 
     private UUID uuid;
     private UUID clientId;

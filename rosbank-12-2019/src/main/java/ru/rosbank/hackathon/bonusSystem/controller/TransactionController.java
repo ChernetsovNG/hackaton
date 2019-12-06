@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.rosbank.hackathon.bonusSystem.dto.TransactionDto;
+import ru.rosbank.hackathon.bonusSystem.dto.Transaction;
 import ru.rosbank.hackathon.bonusSystem.service.TransactionService;
 
 import java.util.List;
@@ -21,14 +21,14 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<TransactionDto> createTransaction(@RequestBody TransactionDto transaction) {
+    public ResponseEntity<Transaction> createTransaction(@RequestBody Transaction transaction) {
         log.debug("createTransaction: transaction = {}", transaction);
-        TransactionDto created = transactionService.create(transaction);
+        Transaction created = transactionService.create(transaction);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public List<TransactionDto> getAll() {
+    public List<Transaction> getAll() {
         return transactionService.getAll();
     }
 }

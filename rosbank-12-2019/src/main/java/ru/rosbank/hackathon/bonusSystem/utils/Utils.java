@@ -1,11 +1,8 @@
 package ru.rosbank.hackathon.bonusSystem.utils;
 
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import ru.rosbank.hackathon.bonusSystem.dto.TransactionDto;
+import ru.rosbank.hackathon.bonusSystem.dto.Transaction;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +22,7 @@ public class Utils {
     }
 
     public static void createTransactionsFile() {
-        TransactionDto transaction1 = new TransactionDto();
+        Transaction transaction1 = new Transaction();
         transaction1.setUuid(UUID.randomUUID());
         transaction1.setClientId(UUID.randomUUID());
         transaction1.setAmount(new BigDecimal("123.11"));
@@ -34,7 +31,7 @@ public class Utils {
         transaction1.setMcc(1234);
         transaction1.setTime(ZonedDateTime.now());
 
-        TransactionDto transaction2 = new TransactionDto();
+        Transaction transaction2 = new Transaction();
         transaction2.setUuid(UUID.randomUUID());
         transaction2.setClientId(UUID.randomUUID());
         transaction2.setAmount(new BigDecimal("126.11"));
@@ -43,7 +40,7 @@ public class Utils {
         transaction2.setMcc(2234);
         transaction2.setTime(ZonedDateTime.now());
 
-        TransactionDto transaction3 = new TransactionDto();
+        Transaction transaction3 = new Transaction();
         transaction3.setUuid(UUID.randomUUID());
         transaction3.setClientId(UUID.randomUUID());
         transaction3.setAmount(new BigDecimal("323.11"));
@@ -52,7 +49,7 @@ public class Utils {
         transaction3.setMcc(3234);
         transaction3.setTime(ZonedDateTime.now());
 
-        List<TransactionDto> transactions = new ArrayList<>();
+        List<Transaction> transactions = new ArrayList<>();
         transactions.add(transaction1);
         transactions.add(transaction2);
         transactions.add(transaction3);

@@ -6,7 +6,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.rosbank.hackathon.bonusSystem.dto.TransactionDto;
+import ru.rosbank.hackathon.bonusSystem.dto.Transaction;
 import ru.rosbank.hackathon.bonusSystem.entity.TransactionEntity;
 import ru.rosbank.hackathon.bonusSystem.properties.DataProperties;
 import ru.rosbank.hackathon.bonusSystem.repository.TransactionRepository;
@@ -57,8 +57,8 @@ public class FileService {
 
     private void processJsonFile(Path file) {
         try {
-            List<TransactionDto> transactions = OBJECT_MAPPER.readValue(
-                    file.toFile(), new TypeReference<List<TransactionDto>>() {
+            List<Transaction> transactions = OBJECT_MAPPER.readValue(
+                    file.toFile(), new TypeReference<List<Transaction>>() {
                     });
             log.debug("processJsonFile: transactions = {}", transactions);
             if (transactions != null && !transactions.isEmpty()) {
@@ -72,9 +72,9 @@ public class FileService {
     }
 
     @Transactional
-    public void saveTransactionsInDatabase(List<TransactionDto> transactions) {
+    public void saveTransactionsInDatabase(List<Transaction> transactions) {
         List<TransactionEntity> transactionEntities = transactions.stream()
-                .map(TransactionDto::toEntity)
+                .map(Transaction::toEntity)
                 .collect(Collectors.toList());
         transactionRepository.saveAll(transactionEntities);
     }

@@ -2,14 +2,13 @@ package ru.rosbank.hackathon.bonusSystem.entity;
 
 import lombok.Data;
 import org.hibernate.annotations.Type;
-import ru.rosbank.hackathon.bonusSystem.dto.TransactionDto;
+import ru.rosbank.hackathon.bonusSystem.dto.Transaction;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -41,8 +40,15 @@ public class TransactionEntity {
     @Column(name = "time")
     private ZonedDateTime time;
 
-    public TransactionDto toDto() {
-        TransactionDto dto = new TransactionDto();
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "bonuses_transactions",
+            joinColumns = {@JoinColumn(name = "transaction_uuid")},
+            inverseJoinColumns = {@JoinColumn(name = "bonus_uuid")})
+    List<BonusEntity> bonuses = new ArrayList<>();
+
+    public Transaction toDto() {
+        Transaction dto = new Transaction();
         dto.setUuid(uuid);
         dto.setClientId(clientId);
         dto.setAmount(amount);
