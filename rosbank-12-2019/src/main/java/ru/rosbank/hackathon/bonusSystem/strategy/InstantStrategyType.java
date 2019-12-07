@@ -40,7 +40,6 @@ public class InstantStrategyType {
         }
         // проверяем ограничения на мин. и макс. значение
         checkThresholdValues(bonus);
-
         return bonus;
     }
 
@@ -54,6 +53,9 @@ public class InstantStrategyType {
     }
 
     private void checkThresholdValues(Bonus bonus) {
+        if (bonus == null) {
+            return;
+        }
         if (minBonus == null && maxBonus == null) {
             return;
         } else if (minBonus != null && maxBonus == null) {
@@ -96,7 +98,7 @@ public class InstantStrategyType {
         if (ratio != null) {
             return transactionAmount.multiply(BigDecimal.valueOf(ratio));
         } else if (amount != null) {
-            return transactionAmount;
+            return BigDecimal.valueOf(amount);
         } else {
             throw new IllegalStrategyException("amount and ratio both are null");
         }

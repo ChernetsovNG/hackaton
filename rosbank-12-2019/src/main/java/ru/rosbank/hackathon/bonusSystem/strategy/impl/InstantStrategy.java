@@ -15,10 +15,8 @@ import ru.rosbank.hackathon.bonusSystem.strategy.StrategyType;
 import ru.rosbank.hackathon.bonusSystem.tuple.Pair;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.rosbank.hackathon.bonusSystem.config.JsonConfig.OBJECT_MAPPER;
 
@@ -44,6 +42,7 @@ public class InstantStrategy implements InstantBonusesCalculateStrategy {
             InstantStrategyType instantStrategyType = strategy.getSecond();
             bonuses.add(instantStrategyType.calculateBonus(transaction, strategyId));
         }
+        bonuses = bonuses.stream().filter(Objects::nonNull).collect(Collectors.toList());
         // TODO: 07.12.2019 пока что берём максимальный из вычисленных бонусов
         return bonuses.isEmpty() ? null :
                 bonuses.stream()

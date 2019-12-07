@@ -16,6 +16,7 @@ import ru.rosbank.hackathon.bonusSystem.strategy.StrategyType;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -89,8 +90,15 @@ public class StrategyService {
                 .map(StrategyEntity::getSettings)
                 .map(this::convertSettingsToStrategy)
                 .collect(Collectors.toList());
+        List<UUID> strategyIds = readyToStartStrategies.stream()
+                .map(AggregatedStrategyProcessingEntity::getStrategy)
+                .map(StrategyEntity::getUuid)
+                .collect(Collectors.toList());
         if (!strategies.isEmpty()) {
-            aggregateStrategyService.performAggregateStrategies(strategies);
+            List<OffsetDateTime> nextTimeList = calculateNextTime(readyToStartStrategies, strategies);
+            // запускаем вычисления в отдельном потоке
+            new Thread(() -> aggregateStrategyService.performAggregateStrategies(
+                    strategies, strategyIds, nextTimeList)).start();
             updateNextTime(readyToStartStrategies, strategies);
         }
     }
@@ -114,6 +122,23 @@ public class StrategyService {
             strategyProcessingEntity.setNextTime(nextNextTime);
             aggregatedStrategyProcessingRepository.save(strategyProcessingEntity);
         }
+    }
+
+    private List<OffsetDateTime> calculateNextTime(List<AggregatedStrategyProcessingEntity> readyToStartStrategies,
+                                                   List<AggregateStrategyType> strategies) {
+        List<OffsetDateTime> result = new ArrayList<>();
+        for (int i = 0; i < strategies.size(); i++) {
+            AggregatedStrategyProcessingEntity strategyProcessingEntity = readyToStartStrategies.get(i);
+            AggregateStrategyType strategy = strategies.get(i);
+            AggregateTimeSettings timeSettings = strategy.getTimeSettings();
+            OffsetDateTime toTime = timeSettings.getToTime();
+            OffsetDateTime prevNextTime = strategyProcessingEntity.getNextTime();
+            Integer quantity = timeSettings.getQuantity();
+            int deltaMinutes = timeSettings.getTimeUnit().getMinutes();
+            OffsetDateTime nextNextTime = prevNextTime.plus(quantity * deltaMinutes, ChronoUnit.MINUTES);
+            result.add(nextNextTime);
+        }
+        return result;
     }
 
     private AggregateStrategyType convertSettingsToStrategy(String settings) {
