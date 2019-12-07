@@ -22,16 +22,17 @@ public class UtilsTest {
 
     @Test
     public void instantStrategyTypeTest() throws JsonProcessingException {
+        /*
+        Здесь для примера: 1% на все покупки, 5% на 3 категории. Категории определяются по мсс
+         */
+
         InstantStrategyType instantStrategyType = new InstantStrategyType();
         List<AmountInterval> intervals = new ArrayList<>();
-        intervals.add(new AmountInterval(0.0, 500.0, 0.01, null));
-        intervals.add(new AmountInterval(500.0, 2000.0, 0.02, null));
-        intervals.add(new AmountInterval(2000.0, 5000.0, 0.05, null));
-        intervals.add(new AmountInterval(5000.0, null, null, 12.0));
+        intervals.add(new AmountInterval(0.0, null, 0.05, null));
         instantStrategyType.setIntervals(intervals);
-        instantStrategyType.setMccList(Arrays.asList(5111, 2738, 3921));
+        instantStrategyType.setMccList(Arrays.asList(1234, 5678, 6543));
         instantStrategyType.setMinBonus(null);
-        instantStrategyType.setMaxBonus(10.0);
+        instantStrategyType.setMaxBonus(null);
 
         Strategy strategy = new Strategy();
         strategy.setUuid(UUID.randomUUID());
