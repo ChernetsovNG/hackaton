@@ -3,8 +3,8 @@ package ru.rosbank.hackathon.bonusSystem.strategy.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Data;
 import org.springframework.stereotype.Component;
-import ru.rosbank.hackathon.bonusSystem.dto.Bonus;
-import ru.rosbank.hackathon.bonusSystem.dto.Transaction;
+import ru.rosbank.hackathon.bonusSystem.domain.Bonus;
+import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 import ru.rosbank.hackathon.bonusSystem.entity.ClientEntity;
 import ru.rosbank.hackathon.bonusSystem.entity.StrategyEntity;
 import ru.rosbank.hackathon.bonusSystem.repository.ClientRepository;
@@ -45,8 +45,7 @@ public class InstantStrategy implements InstantBonusesCalculateStrategy {
             bonuses.add(instantStrategyType.calculateBonus(transaction, strategyId));
         }
         // TODO: 07.12.2019 пока что берём максимальный из вычисленных бонусов
-        return bonuses.isEmpty() ?
-                null :
+        return bonuses.isEmpty() ? null :
                 bonuses.stream()
                         .max(Comparator.comparing(Bonus::getAmount))
                         .orElseThrow(IllegalStateException::new);

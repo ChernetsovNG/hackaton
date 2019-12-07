@@ -2,6 +2,8 @@ package ru.rosbank.hackathon.bonusSystem.entity;
 
 import lombok.Data;
 import org.hibernate.annotations.Type;
+import ru.rosbank.hackathon.bonusSystem.domain.Strategy;
+import ru.rosbank.hackathon.bonusSystem.strategy.StrategyType;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -31,4 +33,14 @@ public class StrategyEntity {
     @ManyToOne
     @JoinColumn(name = "tariff_plan_id", nullable = false, insertable = false, updatable = false)
     private TariffPlanEntity tariffPlan;
+
+    public Strategy toDomain() {
+        Strategy strategy = new Strategy();
+        strategy.setUuid(uuid);
+        strategy.setTitle(title);
+        strategy.setType(StrategyType.valueOf(type));
+        strategy.setSettings(settings);
+        strategy.setTariffPlan(tariffPlan != null ? tariffPlan.toDomain() : null);
+        return strategy;
+    }
 }

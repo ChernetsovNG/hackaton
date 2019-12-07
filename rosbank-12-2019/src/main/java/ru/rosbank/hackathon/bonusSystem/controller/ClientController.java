@@ -5,8 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.rosbank.hackathon.bonusSystem.dto.Client;
-import ru.rosbank.hackathon.bonusSystem.dto.Transaction;
+import ru.rosbank.hackathon.bonusSystem.domain.Client;
 import ru.rosbank.hackathon.bonusSystem.service.ClientService;
 
 import java.util.List;

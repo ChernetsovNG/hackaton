@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.rosbank.hackathon.bonusSystem.dto.Transaction;
+import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 import ru.rosbank.hackathon.bonusSystem.service.TransactionService;
 
 import java.util.List;

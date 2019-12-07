@@ -1,6 +1,6 @@
 package ru.rosbank.hackathon.bonusSystem.strategy;
 
-import ru.rosbank.hackathon.bonusSystem.dto.Bonus;
+import ru.rosbank.hackathon.bonusSystem.domain.Bonus;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;

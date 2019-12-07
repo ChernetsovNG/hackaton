@@ -2,7 +2,7 @@ package ru.rosbank.hackathon.bonusSystem.entity;
 
 import lombok.Data;
 import org.hibernate.annotations.Type;
-import ru.rosbank.hackathon.bonusSystem.dto.Transaction;
+import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -47,7 +47,7 @@ public class TransactionEntity {
             inverseJoinColumns = {@JoinColumn(name = "bonus_uuid")})
     List<BonusEntity> bonuses = new ArrayList<>();
 
-    public Transaction toDto() {
+    public Transaction toDomain() {
         Transaction dto = new Transaction();
         dto.setUuid(uuid);
         dto.setClientId(clientId);

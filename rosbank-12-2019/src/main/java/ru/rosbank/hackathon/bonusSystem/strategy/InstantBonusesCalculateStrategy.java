@@ -1,7 +1,7 @@
 package ru.rosbank.hackathon.bonusSystem.strategy;
 
-import ru.rosbank.hackathon.bonusSystem.dto.Bonus;
-import ru.rosbank.hackathon.bonusSystem.dto.Transaction;
+import ru.rosbank.hackathon.bonusSystem.domain.Bonus;
+import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 
 public interface InstantBonusesCalculateStrategy extends BonusesCalculateStrategy {
 

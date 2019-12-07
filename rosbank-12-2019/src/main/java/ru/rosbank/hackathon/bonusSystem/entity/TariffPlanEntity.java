@@ -2,8 +2,7 @@ package ru.rosbank.hackathon.bonusSystem.entity;
 
 import lombok.Data;
 import org.hibernate.annotations.Type;
-import ru.rosbank.hackathon.bonusSystem.dto.Client;
-import ru.rosbank.hackathon.bonusSystem.dto.TariffPlan;
+import ru.rosbank.hackathon.bonusSystem.domain.TariffPlan;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +23,7 @@ public class TariffPlanEntity {
     @Column(name = "title")
     private String title;
 
-    public TariffPlan toDto() {
+    public TariffPlan toDomain() {
         TariffPlan dto = new TariffPlan();
         dto.setTitle(title);
         dto.setUuid(uuid);

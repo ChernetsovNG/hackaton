@@ -2,8 +2,7 @@ package ru.rosbank.hackathon.bonusSystem.entity;
 
 import lombok.Data;
 import org.hibernate.annotations.Type;
-import ru.rosbank.hackathon.bonusSystem.dto.Client;
-import ru.rosbank.hackathon.bonusSystem.dto.Transaction;
+import ru.rosbank.hackathon.bonusSystem.domain.Client;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -31,12 +30,12 @@ public class ClientEntity {
     @JoinColumn(name = "tariff_plan_id", nullable = false, insertable = false, updatable = false)
     private TariffPlanEntity tariffPlan;
 
-    public Client toDto() {
-        Client dto = new Client();
-        dto.setUuid(uuid);
-        dto.setFirstName(firstName);
-        dto.setLastName(lastName);
-        dto.setTariffPlan(tariffPlan.toDto());
-        return dto;
+    public Client toDomain() {
+        Client client = new Client();
+        client.setUuid(uuid);
+        client.setFirstName(firstName);
+        client.setLastName(lastName);
+        client.setTariffPlan(tariffPlan.toDomain());
+        return client;
     }
 }

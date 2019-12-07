@@ -1,4 +1,4 @@
-package ru.rosbank.hackathon.bonusSystem.dto;
+package ru.rosbank.hackathon.bonusSystem.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

@@ -2,8 +2,8 @@ package ru.rosbank.hackathon.bonusSystem.strategy;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import ru.rosbank.hackathon.bonusSystem.dto.Bonus;
-import ru.rosbank.hackathon.bonusSystem.dto.Transaction;
+import ru.rosbank.hackathon.bonusSystem.domain.Bonus;
+import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 import ru.rosbank.hackathon.bonusSystem.exception.IllegalStrategyException;
 
 import java.math.BigDecimal;
@@ -27,17 +27,21 @@ public class InstantStrategyType {
     private Double maxBonus;
 
     public Bonus calculateBonus(Transaction transaction, UUID strategyId) {
+        Bonus bonus;
         // применяем ко всем MCC
         if (mccList == null) {
-            return calculateBonusByIntervals(transaction, strategyId);
+            bonus = calculateBonusByIntervals(transaction, strategyId);
         } else {  // проверяем, что для нашей транзакции MCC в списке
             Integer transactionMcc = transaction.getMcc();
             if (!mccList.contains(transactionMcc)) {
                 return null;
             }
-            return calculateBonusByIntervals(transaction, strategyId);
+            bonus = calculateBonusByIntervals(transaction, strategyId);
         }
+        // проверяем ограничения на мин. и макс. значение
+        checkThresholdValues(bonus);
 
+        return bonus;
     }
 
     private Bonus calculateBonusByIntervals(Transaction transaction, UUID strategyId) {
@@ -47,6 +51,27 @@ public class InstantStrategyType {
             }
         }
         return null;
+    }
+
+    private void checkThresholdValues(Bonus bonus) {
+        if (minBonus == null && maxBonus == null) {
+            return;
+        } else if (minBonus != null && maxBonus == null) {
+            if (bonus.getAmount().compareTo(BigDecimal.valueOf(minBonus)) < 0) {
+                bonus.setAmount(BigDecimal.valueOf(minBonus));
+            }
+        } else if (minBonus == null) {
+            if (bonus.getAmount().compareTo(BigDecimal.valueOf(maxBonus)) > 0) {
+                bonus.setAmount(BigDecimal.valueOf(maxBonus));
+            }
+        } else {
+            if (bonus.getAmount().compareTo(BigDecimal.valueOf(minBonus)) < 0) {
+                bonus.setAmount(BigDecimal.valueOf(minBonus));
+            }
+            if (bonus.getAmount().compareTo(BigDecimal.valueOf(maxBonus)) > 0) {
+                bonus.setAmount(BigDecimal.valueOf(maxBonus));
+            }
+        }
     }
 
     private Bonus calculateBonusByInterval(Transaction transaction, AmountInterval interval, UUID strategyId) {

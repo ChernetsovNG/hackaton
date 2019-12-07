@@ -2,7 +2,7 @@ package ru.rosbank.hackathon.bonusSystem.utils;
 
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import ru.rosbank.hackathon.bonusSystem.dto.Transaction;
+import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 
 import java.io.File;
 import java.io.IOException;
