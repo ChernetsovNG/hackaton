@@ -1,4 +1,4 @@
-package ru.rosbank.hackathon.bonusSystem.strategy;
+package ru.rosbank.hackathon.bonusSystem.strategy.description;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

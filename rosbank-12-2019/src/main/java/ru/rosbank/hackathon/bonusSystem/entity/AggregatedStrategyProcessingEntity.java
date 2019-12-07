@@ -20,6 +20,9 @@ public class AggregatedStrategyProcessingEntity {
     @OneToOne(fetch = FetchType.EAGER)
     private StrategyEntity strategy;
 
+    /**
+     * Планируемое время выполнения агрегирующей стратегии
+     */
     @Column(name = "next_time")
     private OffsetDateTime nextTime;
 }

@@ -10,7 +10,7 @@ import ru.rosbank.hackathon.bonusSystem.domain.Bonus;
 import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 import ru.rosbank.hackathon.bonusSystem.entity.BonusEntity;
 import ru.rosbank.hackathon.bonusSystem.repository.BonusRepository;
-import ru.rosbank.hackathon.bonusSystem.strategy.InstantStrategy;
+import ru.rosbank.hackathon.bonusSystem.strategy.calc.InstantBonusesCalculateStrategyImpl;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.OffsetDateTime;
@@ -24,17 +24,17 @@ public class BonusService {
 
     private final BonusRepository bonusRepository;
 
-    private final InstantStrategy instantStrategy;
+    private final InstantBonusesCalculateStrategyImpl instantBonusesCalculateStrategyImpl;
 
-    public BonusService(BonusRepository bonusRepository, InstantStrategy instantStrategy) {
+    public BonusService(BonusRepository bonusRepository, InstantBonusesCalculateStrategyImpl instantBonusesCalculateStrategyImpl) {
         this.bonusRepository = bonusRepository;
-        this.instantStrategy = instantStrategy;
+        this.instantBonusesCalculateStrategyImpl = instantBonusesCalculateStrategyImpl;
     }
 
     @KafkaListener(topics = "TransactionEvents", clientIdPrefix = "json", containerFactory = "kafkaListenerContainerFactory")
     @Transactional
     public void onTransactionEvent(ConsumerRecord<String, Transaction> consumerRecord, @Payload Transaction transaction) {
-        Bonus bonus = instantStrategy.calculate(transaction);
+        Bonus bonus = instantBonusesCalculateStrategyImpl.calculate(transaction);
         BonusEntity bonusEntity = bonus.toEntity();
         bonusRepository.save(bonusEntity);
     }

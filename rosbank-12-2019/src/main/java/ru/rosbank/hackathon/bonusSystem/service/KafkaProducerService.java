@@ -10,14 +10,11 @@ public class KafkaProducerService {
 
     private final KafkaTemplate<String, Object> template;
     private final String topicName;
-    private final int messagesPerRequest;
 
     public KafkaProducerService(KafkaTemplate<String, Object> template,
-                                @Value("${transactions.topic-name}") String topicName,
-                                @Value("${transactions.messages-per-request}") int messagesPerRequest) {
+                                @Value("${transactions.topic-name}") String topicName) {
         this.template = template;
         this.topicName = topicName;
-        this.messagesPerRequest = messagesPerRequest;
     }
 
     public void sendTransactionEvent(Transaction transaction) {

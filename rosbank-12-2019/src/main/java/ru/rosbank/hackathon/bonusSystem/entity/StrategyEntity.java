@@ -3,7 +3,7 @@ package ru.rosbank.hackathon.bonusSystem.entity;
 import lombok.Data;
 import org.hibernate.annotations.Type;
 import ru.rosbank.hackathon.bonusSystem.domain.Strategy;
-import ru.rosbank.hackathon.bonusSystem.strategy.StrategyType;
+import ru.rosbank.hackathon.bonusSystem.strategy.enums.StrategyType;
 
 import javax.persistence.*;
 import java.util.UUID;

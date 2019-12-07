@@ -1,7 +1,8 @@
-package ru.rosbank.hackathon.bonusSystem.strategy;
+package ru.rosbank.hackathon.bonusSystem.strategy.description;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import ru.rosbank.hackathon.bonusSystem.strategy.enums.AggregateTimeUnit;
 
 import java.time.OffsetDateTime;
 

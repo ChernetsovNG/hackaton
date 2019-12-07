@@ -1,4 +1,4 @@
-package ru.rosbank.hackathon.bonusSystem.strategy;
+package ru.rosbank.hackathon.bonusSystem.strategy.calc;
 
 import ru.rosbank.hackathon.bonusSystem.domain.Bonus;
 import ru.rosbank.hackathon.bonusSystem.domain.Transaction;

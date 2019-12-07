@@ -15,8 +15,8 @@ public interface StrategyRepository extends JpaRepository<StrategyEntity, UUID> 
 
     @Query("SELECT strategy FROM StrategyEntity strategy WHERE " +
             "strategy.type = :strategyType AND strategy.tariffPlan.uuid = :tariffPlanId")
-    List<StrategyEntity> findInstantStrategiesByClient(@Param("tariffPlanId") UUID tariffPlanId,
-                                                       @Param("strategyType") String type);
+    List<StrategyEntity> findInstantStrategiesByTariffPlan(@Param("tariffPlanId") UUID tariffPlanId,
+                                                           @Param("strategyType") String type);
 
     @Modifying
     @Query("update StrategyEntity s set s.tariffPlanId = :tariffPlanId WHERE s.uuid = :strategyId")

@@ -2,7 +2,7 @@ package ru.rosbank.hackathon.bonusSystem.domain;
 
 import lombok.Data;
 import ru.rosbank.hackathon.bonusSystem.entity.StrategyEntity;
-import ru.rosbank.hackathon.bonusSystem.strategy.StrategyType;
+import ru.rosbank.hackathon.bonusSystem.strategy.enums.StrategyType;
 
 import java.util.UUID;
 

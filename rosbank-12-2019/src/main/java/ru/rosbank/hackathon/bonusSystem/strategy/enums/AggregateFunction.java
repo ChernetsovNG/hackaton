@@ -1,4 +1,4 @@
-package ru.rosbank.hackathon.bonusSystem.strategy;
+package ru.rosbank.hackathon.bonusSystem.strategy.enums;
 
 public enum AggregateFunction {
 

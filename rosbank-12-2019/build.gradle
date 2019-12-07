@@ -23,8 +23,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'commons-io:commons-io:2.6'
-    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.1'
-    compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.3.4.RELEASE'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.1'
+    implementation 'org.springframework.kafka:spring-kafka:2.3.4.RELEASE'
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
