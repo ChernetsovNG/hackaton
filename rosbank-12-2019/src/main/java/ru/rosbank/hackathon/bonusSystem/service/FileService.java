@@ -36,7 +36,7 @@ public class FileService {
         this.transactionRepository = transactionRepository;
     }
 
-    @Scheduled(fixedRateString = "${data.scan-frequency-ms}")
+//    @Scheduled(fixedRateString = "${data.scan-frequency-ms}")
     public void readDataFile() {
         String folder = dataProperties.getFolder();
         log.debug("readDataFile: folder = {}", folder);
