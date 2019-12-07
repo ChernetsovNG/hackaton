@@ -56,11 +56,23 @@ public class AggregateStrategyService {
         // выбираем транзакции в заданном временном диапазоне
         List<TransactionEntity> transactions = transactionRepository
                 .findAllByTimeGreaterThanEqualAndTimeLessThanEqual(fromTime, toTime);
+        if (transactions.isEmpty()) {
+            return;
+        }
         // группируем их по пользователю
+        Map<UUID, List<Transaction>> domainTransactionByUsersMap = groupTransactionsByClients(transactions);
+        domainTransactionByUsersMap.forEach((clientId, domainTransactions) -> {
+            Bonus bonus = calculateBonus(clientId, domainTransactions, strategy, strategyId);
+            BonusEntity bonusEntity = bonus.toEntity();
+            bonusRepository.save(bonusEntity);
+        });
+    }
+
+    private Map<UUID, List<Transaction>> groupTransactionsByClients(List<TransactionEntity> transactions) {
         Map<UUID, List<TransactionEntity>> transactionByUsersMap = transactions.stream()
                 .collect(Collectors.groupingBy(TransactionEntity::getClientId));
         // для каждого пользователя считаем сумму по его тразакциям
-        Map<UUID, List<Transaction>> domainTransactionByUsersMap = transactionByUsersMap.entrySet().stream()
+        return transactionByUsersMap.entrySet().stream()
                 .map(entry -> {
                     UUID clientId = entry.getKey();
                     List<TransactionEntity> clientTransactions = entry.getValue();
@@ -70,12 +82,6 @@ public class AggregateStrategyService {
                     return Pair.of(clientId, domainTransactions);
                 })
                 .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond));
-        domainTransactionByUsersMap.forEach((clientId, domainTransactions) -> {
-            Bonus bonus = calculateBonus(clientId, domainTransactions, strategy, strategyId);
-            // сохраняем вычисленный бонус в БД
-            BonusEntity bonusEntity = bonus.toEntity();
-            bonusRepository.save(bonusEntity);
-        });
     }
 
     private Bonus calculateBonus(UUID clientId, List<Transaction> transactions,
