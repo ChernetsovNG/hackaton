@@ -13,11 +13,31 @@ public class Transaction {
 
     private UUID uuid;
     private UUID clientId;
+
+    /**
+     * Сумма транзакция
+     */
     private BigDecimal amount;
+
+    /**
+     * Валюта транзакции
+     * // TODO: 07.12.2019 пока что не учитывается при вычислениях (считатеся, что это всегда рубли)
+     */
     private String currency;
+
+    /**
+     * Идентификатор торговой точки
+     */
     private UUID marketId;
+
+    /**
+     * Идентификатор категории тогровой точки
+     */
     private Integer mcc;
 
+    /**
+     * Время выполнения транзакции
+     */
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private OffsetDateTime time;
 

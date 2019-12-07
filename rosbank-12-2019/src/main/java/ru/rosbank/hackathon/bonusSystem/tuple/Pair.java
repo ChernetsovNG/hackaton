@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Data
 @Getter
-public class Pair<K, V> {
+public final class Pair<K, V> {
 
     private final K first;
 

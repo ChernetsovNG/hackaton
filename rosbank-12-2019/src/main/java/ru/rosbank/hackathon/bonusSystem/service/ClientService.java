@@ -1,6 +1,5 @@
 package ru.rosbank.hackathon.bonusSystem.service;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +20,7 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
 
+    @Transactional(readOnly = true)
     public List<Client> getAllClients() {
         List<ClientEntity> client = clientRepository.findAll();
         return client.stream()

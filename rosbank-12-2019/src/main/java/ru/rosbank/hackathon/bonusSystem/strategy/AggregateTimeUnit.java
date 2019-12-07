@@ -5,8 +5,8 @@ import lombok.Getter;
 public enum AggregateTimeUnit {
     MINUTES(1),
     HOURS(60),
-    DAYS(1440),
-    WEEKS(10080);
+    DAYS(24 * 60),
+    WEEKS(24 * 60 * 7);
 
     @Getter
     private final int minutes;

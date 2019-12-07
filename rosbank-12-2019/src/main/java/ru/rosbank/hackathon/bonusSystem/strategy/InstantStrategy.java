@@ -1,4 +1,4 @@
-package ru.rosbank.hackathon.bonusSystem.strategy.impl;
+package ru.rosbank.hackathon.bonusSystem.strategy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Data;
@@ -9,9 +9,6 @@ import ru.rosbank.hackathon.bonusSystem.entity.ClientEntity;
 import ru.rosbank.hackathon.bonusSystem.entity.StrategyEntity;
 import ru.rosbank.hackathon.bonusSystem.repository.ClientRepository;
 import ru.rosbank.hackathon.bonusSystem.repository.StrategyRepository;
-import ru.rosbank.hackathon.bonusSystem.strategy.InstantBonusesCalculateStrategy;
-import ru.rosbank.hackathon.bonusSystem.strategy.InstantStrategyType;
-import ru.rosbank.hackathon.bonusSystem.strategy.StrategyType;
 import ru.rosbank.hackathon.bonusSystem.tuple.Pair;
 
 import javax.persistence.EntityNotFoundException;
@@ -42,8 +39,10 @@ public class InstantStrategy implements InstantBonusesCalculateStrategy {
             InstantStrategyType instantStrategyType = strategy.getSecond();
             bonuses.add(instantStrategyType.calculateBonus(transaction, strategyId));
         }
-        bonuses = bonuses.stream().filter(Objects::nonNull).collect(Collectors.toList());
-        // TODO: 07.12.2019 пока что берём максимальный из вычисленных бонусов
+        bonuses = bonuses.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        // TODO: 07.12.2019 пока что берём максимальный из вычисленных по разным стратегиям бонусов
         return bonuses.isEmpty() ? null :
                 bonuses.stream()
                         .max(Comparator.comparing(Bonus::getAmount))

@@ -10,7 +10,7 @@ import ru.rosbank.hackathon.bonusSystem.domain.Bonus;
 import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 import ru.rosbank.hackathon.bonusSystem.entity.BonusEntity;
 import ru.rosbank.hackathon.bonusSystem.repository.BonusRepository;
-import ru.rosbank.hackathon.bonusSystem.strategy.impl.InstantStrategy;
+import ru.rosbank.hackathon.bonusSystem.strategy.InstantStrategy;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -32,8 +32,7 @@ public class BonusService {
 
     @KafkaListener(topics = "TransactionEvents", clientIdPrefix = "json", containerFactory = "kafkaListenerContainerFactory")
     @Transactional
-    public void onTransactionEvent(ConsumerRecord<String, Transaction> consumerRecord,
-                                   @Payload Transaction transaction) {
+    public void onTransactionEvent(ConsumerRecord<String, Transaction> consumerRecord, @Payload Transaction transaction) {
         Bonus bonus = instantStrategy.calculate(transaction);
         BonusEntity bonusEntity = bonus.toEntity();
         bonusRepository.save(bonusEntity);

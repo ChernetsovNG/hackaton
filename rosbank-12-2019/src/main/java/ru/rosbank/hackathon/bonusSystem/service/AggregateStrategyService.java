@@ -100,19 +100,17 @@ public class AggregateStrategyService {
             bonus = calculateBonusByIntervals(transactions, intervals, clientId, strategyId);
         }
         // проверяем ограничения на мин. и макс. значение
-        checkThresholdValues(bonus, minBonus, maxBonus);
+        if (bonus != null) {
+            bonus.checkThresholdValues(minBonus, maxBonus);
+        }
         return bonus;
     }
 
     private Bonus calculateBonusByIntervals(List<Transaction> transactions, List<AmountInterval> intervals,
                                             UUID clientId, UUID strategyId) {
-        double transactionsSum = transactions.stream()
-                .map(Transaction::getAmount)
-                .map(BigDecimal::doubleValue)
-                .mapToDouble(v -> v)
-                .sum();
+        double transactionsSum = calculateTransactionsSum(transactions);
         for (AmountInterval interval : intervals) {
-            if (transactionsSumInInterval(transactionsSum, interval)) {
+            if (interval.valueInInterval(transactionsSum)) {
                 return calculateBonusByInterval(transactions, transactionsSum, interval, clientId, strategyId);
             }
         }
@@ -137,6 +135,14 @@ public class AggregateStrategyService {
         return bonus;
     }
 
+    private double calculateTransactionsSum(List<Transaction> transactions) {
+        return transactions.stream()
+                .map(Transaction::getAmount)
+                .map(BigDecimal::doubleValue)
+                .mapToDouble(v -> v)
+                .sum();
+    }
+
     private BigDecimal calculateBonusAmount(Double transactionsSum, Double ratio, Double amount) {
         if (ratio != null) {
             return BigDecimal.valueOf(transactionsSum * ratio);
@@ -145,35 +151,5 @@ public class AggregateStrategyService {
         } else {
             throw new IllegalStrategyException("amount and ratio both are null");
         }
-    }
-
-    private void checkThresholdValues(Bonus bonus, Double minBonus, Double maxBonus) {
-        if (bonus == null) {
-            return;
-        }
-        if (minBonus == null && maxBonus == null) {
-            return;
-        } else if (minBonus != null && maxBonus == null) {
-            if (bonus.getAmount().compareTo(BigDecimal.valueOf(minBonus)) < 0) {
-                bonus.setAmount(BigDecimal.valueOf(minBonus));
-            }
-        } else if (minBonus == null) {
-            if (bonus.getAmount().compareTo(BigDecimal.valueOf(maxBonus)) > 0) {
-                bonus.setAmount(BigDecimal.valueOf(maxBonus));
-            }
-        } else {
-            if (bonus.getAmount().compareTo(BigDecimal.valueOf(minBonus)) < 0) {
-                bonus.setAmount(BigDecimal.valueOf(minBonus));
-            }
-            if (bonus.getAmount().compareTo(BigDecimal.valueOf(maxBonus)) > 0) {
-                bonus.setAmount(BigDecimal.valueOf(maxBonus));
-            }
-        }
-    }
-
-    private boolean transactionsSumInInterval(Double transactionsSum, AmountInterval interval) {
-        Double from = interval.getFrom();
-        Double to = interval.getTo();
-        return to != null ? transactionsSum >= from && transactionsSum <= to : transactionsSum >= from;
     }
 }

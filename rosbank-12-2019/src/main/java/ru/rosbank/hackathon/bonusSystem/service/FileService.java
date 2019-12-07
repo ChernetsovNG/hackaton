@@ -3,6 +3,7 @@ package ru.rosbank.hackathon.bonusSystem.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
@@ -30,12 +31,16 @@ public class FileService {
 
     private final TransactionRepository transactionRepository;
 
-    public FileService(DataProperties dataProperties, TransactionRepository transactionRepository) {
+    private final KafkaProducerService kafkaProducerService;
+
+    public FileService(DataProperties dataProperties, TransactionRepository transactionRepository,
+                       KafkaProducerService kafkaProducerService) {
         this.dataProperties = dataProperties;
         this.transactionRepository = transactionRepository;
+        this.kafkaProducerService = kafkaProducerService;
     }
 
-//    @Scheduled(fixedRateString = "${data.scan-frequency-ms}")
+    @Scheduled(fixedRateString = "${data.scan-frequency-ms}")
     public void readDataFile() {
         String folder = dataProperties.getFolder();
         log.debug("readDataFile: folder = {}", folder);
@@ -76,5 +81,9 @@ public class FileService {
                 .map(Transaction::toEntity)
                 .collect(Collectors.toList());
         transactionRepository.saveAll(transactionEntities);
+        // Отправляем в Kafka события о сохранении транзакций в БД
+        for (Transaction transaction : transactions) {
+            kafkaProducerService.sendTransactionEvent(transaction);
+        }
     }
 }

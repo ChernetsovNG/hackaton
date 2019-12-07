@@ -12,7 +12,15 @@ public class Strategy {
     private UUID uuid;
     private String title;
     private StrategyType type;
+
+    /**
+     * Конфигурация стратегии, в соответствии с которой начилсяются бонусы
+     */
     private String settings;
+
+    /**
+     * Идентификатор тарифного плана, к которому относится стратегия
+     */
     private UUID tariffPlanId;
 
     public StrategyEntity toEntity() {

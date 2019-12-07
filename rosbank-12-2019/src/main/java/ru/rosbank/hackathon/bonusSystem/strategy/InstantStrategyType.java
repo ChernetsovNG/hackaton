@@ -39,41 +39,19 @@ public class InstantStrategyType {
             bonus = calculateBonusByIntervals(transaction, strategyId);
         }
         // проверяем ограничения на мин. и макс. значение
-        checkThresholdValues(bonus);
+        if (bonus != null) {
+            bonus.checkThresholdValues(minBonus, maxBonus);
+        }
         return bonus;
     }
 
     private Bonus calculateBonusByIntervals(Transaction transaction, UUID strategyId) {
         for (AmountInterval interval : intervals) {
-            if (transactionAmountInInterval(transaction, interval)) {
+            if (interval.valueInInterval(transaction.getAmount().doubleValue())) {
                 return calculateBonusByInterval(transaction, interval, strategyId);
             }
         }
         return null;
-    }
-
-    private void checkThresholdValues(Bonus bonus) {
-        if (bonus == null) {
-            return;
-        }
-        if (minBonus == null && maxBonus == null) {
-            return;
-        } else if (minBonus != null && maxBonus == null) {
-            if (bonus.getAmount().compareTo(BigDecimal.valueOf(minBonus)) < 0) {
-                bonus.setAmount(BigDecimal.valueOf(minBonus));
-            }
-        } else if (minBonus == null) {
-            if (bonus.getAmount().compareTo(BigDecimal.valueOf(maxBonus)) > 0) {
-                bonus.setAmount(BigDecimal.valueOf(maxBonus));
-            }
-        } else {
-            if (bonus.getAmount().compareTo(BigDecimal.valueOf(minBonus)) < 0) {
-                bonus.setAmount(BigDecimal.valueOf(minBonus));
-            }
-            if (bonus.getAmount().compareTo(BigDecimal.valueOf(maxBonus)) > 0) {
-                bonus.setAmount(BigDecimal.valueOf(maxBonus));
-            }
-        }
     }
 
     private Bonus calculateBonusByInterval(Transaction transaction, AmountInterval interval, UUID strategyId) {
@@ -102,14 +80,5 @@ public class InstantStrategyType {
         } else {
             throw new IllegalStrategyException("amount and ratio both are null");
         }
-    }
-
-    private boolean transactionAmountInInterval(Transaction transaction, AmountInterval interval) {
-        BigDecimal amount = transaction.getAmount();
-        Double from = interval.getFrom();
-        Double to = interval.getTo();
-        return to != null ?
-                amount.compareTo(BigDecimal.valueOf(from)) >= 0 && amount.compareTo(BigDecimal.valueOf(to)) <= 0 :
-                amount.compareTo(BigDecimal.valueOf(from)) >= 0;
     }
 }

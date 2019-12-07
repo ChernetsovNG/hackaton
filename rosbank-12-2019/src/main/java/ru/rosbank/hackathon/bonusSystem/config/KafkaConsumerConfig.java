@@ -15,8 +15,11 @@ import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 @Configuration
 public class KafkaConsumerConfig {
 
-    @Autowired
-    private KafkaProperties kafkaProperties;
+    private final KafkaProperties kafkaProperties;
+
+    public KafkaConsumerConfig(KafkaProperties kafkaProperties) {
+        this.kafkaProperties = kafkaProperties;
+    }
 
     @Bean
     public ConsumerFactory<String, Transaction> consumerFactory() {

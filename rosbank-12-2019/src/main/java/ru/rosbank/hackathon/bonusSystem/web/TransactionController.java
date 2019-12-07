@@ -8,6 +8,7 @@ import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 import ru.rosbank.hackathon.bonusSystem.service.TransactionService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/transactions")
@@ -28,7 +29,7 @@ public class TransactionController {
     }
 
     @GetMapping
-    public List<Transaction> getAll() {
-        return transactionService.getAll();
+    public List<Transaction> getTransactions(@RequestParam(name = "clientId", required = false) UUID clientId) {
+        return transactionService.getAll(clientId);
     }
 }

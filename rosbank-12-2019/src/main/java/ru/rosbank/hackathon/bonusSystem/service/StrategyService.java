@@ -61,17 +61,7 @@ public class StrategyService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void planScheduledPerform(StrategyEntity strategyEntity, String settings) {
-        AggregateStrategyType aggregateStrategyType = convertSettingsToStrategy(settings);
-        AggregateTimeSettings timeSettings = aggregateStrategyType.getTimeSettings();
-        OffsetDateTime fromTime = timeSettings.getFromTime();
-        Integer quantity = timeSettings.getQuantity();
-        int minutes = timeSettings.getTimeUnit().getMinutes();
-        OffsetDateTime nextTime = fromTime.plus(quantity * minutes, ChronoUnit.MINUTES);
-        AggregatedStrategyProcessingEntity aggregatedStrategyProcessingEntity = new AggregatedStrategyProcessingEntity();
-        aggregatedStrategyProcessingEntity.setUuid(UUID.randomUUID());
-        aggregatedStrategyProcessingEntity.setStrategy(strategyEntity);
-        aggregatedStrategyProcessingEntity.setNextTime(nextTime);
-        aggregatedStrategyProcessingRepository.save(aggregatedStrategyProcessingEntity);
+        aggregatedStrategyProcessingRepository.save(createAggregatedStrategyProcessingEntity(strategyEntity, settings));
     }
 
     @Transactional
@@ -124,6 +114,20 @@ public class StrategyService {
         }
     }
 
+    private AggregatedStrategyProcessingEntity createAggregatedStrategyProcessingEntity(StrategyEntity strategyEntity, String settings) {
+        AggregateStrategyType aggregateStrategyType = convertSettingsToStrategy(settings);
+        AggregateTimeSettings timeSettings = aggregateStrategyType.getTimeSettings();
+        OffsetDateTime fromTime = timeSettings.getFromTime();
+        Integer quantity = timeSettings.getQuantity();
+        int minutes = timeSettings.getTimeUnit().getMinutes();
+        OffsetDateTime nextTime = fromTime.plus(quantity * minutes, ChronoUnit.MINUTES);
+        AggregatedStrategyProcessingEntity aggregatedStrategyProcessingEntity = new AggregatedStrategyProcessingEntity();
+        aggregatedStrategyProcessingEntity.setUuid(UUID.randomUUID());
+        aggregatedStrategyProcessingEntity.setStrategy(strategyEntity);
+        aggregatedStrategyProcessingEntity.setNextTime(nextTime);
+        return aggregatedStrategyProcessingEntity;
+    }
+
     private List<OffsetDateTime> calculateNextTime(List<AggregatedStrategyProcessingEntity> readyToStartStrategies,
                                                    List<AggregateStrategyType> strategies) {
         List<OffsetDateTime> result = new ArrayList<>();
@@ -131,11 +135,10 @@ public class StrategyService {
             AggregatedStrategyProcessingEntity strategyProcessingEntity = readyToStartStrategies.get(i);
             AggregateStrategyType strategy = strategies.get(i);
             AggregateTimeSettings timeSettings = strategy.getTimeSettings();
-            OffsetDateTime toTime = timeSettings.getToTime();
             OffsetDateTime prevNextTime = strategyProcessingEntity.getNextTime();
             Integer quantity = timeSettings.getQuantity();
-            int deltaMinutes = timeSettings.getTimeUnit().getMinutes();
-            OffsetDateTime nextNextTime = prevNextTime.plus(quantity * deltaMinutes, ChronoUnit.MINUTES);
+            int minutes = timeSettings.getTimeUnit().getMinutes();
+            OffsetDateTime nextNextTime = prevNextTime.plus(quantity * minutes, ChronoUnit.MINUTES);
             result.add(nextNextTime);
         }
         return result;

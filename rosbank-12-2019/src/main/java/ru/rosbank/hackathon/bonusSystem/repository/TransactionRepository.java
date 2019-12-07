@@ -11,5 +11,7 @@ import java.util.UUID;
 @Repository
 public interface TransactionRepository extends JpaRepository<TransactionEntity, UUID> {
 
+    List<TransactionEntity> findAllByClientId(UUID clientId);
+
     List<TransactionEntity> findAllByTimeGreaterThanEqualAndTimeLessThanEqual(OffsetDateTime fromTime, OffsetDateTime toTime);
 }

@@ -24,7 +24,7 @@ transactions:
   messages-per-request: 1
 
 data:
-  folder: ./rosbank-12-2019/data-folder
+  folder: /home/nchernetsov/Education/hackaton/rosbank-12-2019/data-folder
   scan-frequency-ms: 10000
 
 logging:

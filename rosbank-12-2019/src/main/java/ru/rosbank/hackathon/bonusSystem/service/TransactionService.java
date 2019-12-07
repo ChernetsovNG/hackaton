@@ -7,6 +7,7 @@ import ru.rosbank.hackathon.bonusSystem.entity.TransactionEntity;
 import ru.rosbank.hackathon.bonusSystem.repository.TransactionRepository;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,8 +32,10 @@ public class TransactionService {
     }
 
     @Transactional(readOnly = true)
-    public List<Transaction> getAll() {
-        List<TransactionEntity> transactions = transactionRepository.findAll();
+    public List<Transaction> getAll(UUID clientId) {
+        List<TransactionEntity> transactions = clientId != null ?
+                transactionRepository.findAllByClientId(clientId) :
+                transactionRepository.findAll();
         return transactions.stream()
                 .map(TransactionEntity::toDomain)
                 .collect(Collectors.toList());

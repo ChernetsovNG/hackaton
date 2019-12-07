@@ -12,4 +12,8 @@ public class AmountInterval {
     private Double to;
     private Double ratio;
     private Double amount;
+
+    public boolean valueInInterval(Double value) {
+        return to != null ? value >= from && value <= to : value >= from;
+    }
 }

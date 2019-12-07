@@ -3,7 +3,6 @@ package ru.rosbank.hackathon.bonusSystem.config;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
@@ -19,13 +18,14 @@ import java.util.Map;
 @Configuration
 public class KafkaProducerConfig {
 
-    @Autowired
-    private KafkaProperties kafkaProperties;
+    private final KafkaProperties kafkaProperties;
 
     @Value("${transactions.topic-name}")
     private String topicName;
 
-    // Producer configuration
+    public KafkaProducerConfig(KafkaProperties kafkaProperties) {
+        this.kafkaProperties = kafkaProperties;
+    }
 
     @Bean
     public Map<String, Object> producerConfigs() {
