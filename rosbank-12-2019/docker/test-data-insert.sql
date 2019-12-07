@@ -1,5 +1,0 @@
-
-
-insert into clients (
-
-)
