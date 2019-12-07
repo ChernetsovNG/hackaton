@@ -6,7 +6,7 @@ import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +38,7 @@ public class TransactionEntity {
     private Integer mcc;
 
     @Column(name = "time")
-    private ZonedDateTime time;
+    private OffsetDateTime time;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(

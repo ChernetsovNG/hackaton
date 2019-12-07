@@ -1,26 +1,42 @@
 package ru.rosbank.hackathon.bonusSystem.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+import ru.rosbank.hackathon.bonusSystem.entity.BonusEntity;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Data
 public class Bonus {
 
     private UUID uuid;
-    private List<UUID> transactionIds;
+    private List<Transaction> transactions;
     private UUID clientId;
     private BigDecimal amount;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-    private ZonedDateTime createTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private OffsetDateTime createTime;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-    private ZonedDateTime updateTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private OffsetDateTime updateTime;
 
     private UUID strategyId;
+
+    public BonusEntity toEntity() {
+        BonusEntity entity = new BonusEntity();
+        entity.setUuid(uuid);
+        entity.setClientId(clientId);
+        entity.setAmount(amount);
+        entity.setCreateTime(createTime);
+        entity.setUpdateTime(updateTime);
+        entity.setStrategyId(strategyId);
+        entity.setTransactions(transactions.stream()
+                .map(Transaction::toEntity)
+                .collect(Collectors.toList()));
+        return entity;
+    }
 }

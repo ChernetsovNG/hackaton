@@ -7,7 +7,7 @@ import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 import ru.rosbank.hackathon.bonusSystem.exception.IllegalStrategyException;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -82,18 +82,17 @@ public class InstantStrategyType {
 
         Bonus bonus = new Bonus();
         bonus.setUuid(UUID.randomUUID());
-        bonus.setTransactionIds(Collections.singletonList(transaction.getUuid()));
+        bonus.setTransactions(Collections.singletonList(transaction));
         bonus.setClientId(transaction.getClientId());
         bonus.setAmount(bonusAmount);
-        bonus.setCreateTime(ZonedDateTime.now());
-        bonus.setUpdateTime(null);
+        bonus.setCreateTime(OffsetDateTime.now());
+        bonus.setUpdateTime(OffsetDateTime.now());
         bonus.setStrategyId(strategyId);
 
         return bonus;
     }
 
     private BigDecimal calculateBonusAmount(BigDecimal transactionAmount, Double ratio, Double amount) {
-        BigDecimal bonusAmount;
         if (ratio != null) {
             return transactionAmount.multiply(BigDecimal.valueOf(ratio));
         } else if (amount != null) {

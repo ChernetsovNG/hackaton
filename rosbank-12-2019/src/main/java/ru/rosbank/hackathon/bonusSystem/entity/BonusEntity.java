@@ -5,7 +5,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -28,10 +28,10 @@ public class BonusEntity {
     private BigDecimal amount;
 
     @Column(name = "create_time")
-    private ZonedDateTime createTime;
+    private OffsetDateTime createTime;
 
     @Column(name = "update_time")
-    private ZonedDateTime updateTime;
+    private OffsetDateTime updateTime;
 
     @Type(type = "pg-uuid")
     @Column(name = "strategy_id")

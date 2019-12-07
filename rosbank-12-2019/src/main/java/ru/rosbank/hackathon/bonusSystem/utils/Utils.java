@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +29,7 @@ public class Utils {
         transaction1.setCurrency("RUB");
         transaction1.setMarketId(UUID.randomUUID());
         transaction1.setMcc(1234);
-        transaction1.setTime(ZonedDateTime.now());
+        transaction1.setTime(OffsetDateTime.now());
 
         Transaction transaction2 = new Transaction();
         transaction2.setUuid(UUID.randomUUID());
@@ -38,7 +38,7 @@ public class Utils {
         transaction2.setCurrency("EUR");
         transaction2.setMarketId(UUID.randomUUID());
         transaction2.setMcc(2234);
-        transaction2.setTime(ZonedDateTime.now());
+        transaction2.setTime(OffsetDateTime.now());
 
         Transaction transaction3 = new Transaction();
         transaction3.setUuid(UUID.randomUUID());
@@ -47,7 +47,7 @@ public class Utils {
         transaction3.setCurrency("USD");
         transaction3.setMarketId(UUID.randomUUID());
         transaction3.setMcc(3234);
-        transaction3.setTime(ZonedDateTime.now());
+        transaction3.setTime(OffsetDateTime.now());
 
         List<Transaction> transactions = new ArrayList<>();
         transactions.add(transaction1);

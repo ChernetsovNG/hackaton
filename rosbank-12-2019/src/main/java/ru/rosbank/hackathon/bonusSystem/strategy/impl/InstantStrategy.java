@@ -57,8 +57,8 @@ public class InstantStrategy implements InstantBonusesCalculateStrategy {
                 .orElseThrow(EntityNotFoundException::new);
         UUID tariffPlanId = client.getTariffPlanId();
 
-        List<StrategyEntity> strategies = strategyRepository
-                .findInstantStrategiesByClient(tariffPlanId, StrategyType.INSTANT.toString());
+        List<StrategyEntity> strategies = strategyRepository.findInstantStrategiesByClient(
+                tariffPlanId, StrategyType.INSTANT.toString());
 
         List<Pair<UUID, InstantStrategyType>> result = new ArrayList<>();
         for (StrategyEntity strategy : strategies) {

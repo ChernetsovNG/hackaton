@@ -1,11 +1,11 @@
 package ru.rosbank.hackathon.bonusSystem.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import ru.rosbank.hackathon.bonusSystem.entity.TransactionEntity;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Data
@@ -18,8 +18,8 @@ public class Transaction {
     private UUID marketId;
     private Integer mcc;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-    private ZonedDateTime time;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private OffsetDateTime time;
 
     public TransactionEntity toEntity() {
         TransactionEntity entity = new TransactionEntity();
