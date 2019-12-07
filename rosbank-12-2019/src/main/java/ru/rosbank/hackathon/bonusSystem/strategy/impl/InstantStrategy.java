@@ -12,11 +12,13 @@ import ru.rosbank.hackathon.bonusSystem.repository.StrategyRepository;
 import ru.rosbank.hackathon.bonusSystem.strategy.InstantBonusesCalculateStrategy;
 import ru.rosbank.hackathon.bonusSystem.strategy.InstantStrategyType;
 import ru.rosbank.hackathon.bonusSystem.strategy.StrategyType;
+import ru.rosbank.hackathon.bonusSystem.tuple.Pair;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static ru.rosbank.hackathon.bonusSystem.config.JsonConfig.OBJECT_MAPPER;
 
@@ -35,14 +37,22 @@ public class InstantStrategy implements InstantBonusesCalculateStrategy {
 
     @Override
     public Bonus calculate(Transaction transaction) {
-        List<InstantStrategyType> strategies = getStrategies(transaction);
-
-        // TODO: 07.12.2019 apply strategies to transaction
-
-        return new Bonus();
+        List<Pair<UUID, InstantStrategyType>> strategies = getStrategies(transaction);
+        List<Bonus> bonuses = new ArrayList<>();
+        for (Pair<UUID, InstantStrategyType> strategy : strategies) {
+            UUID strategyId = strategy.getFirst();
+            InstantStrategyType instantStrategyType = strategy.getSecond();
+            bonuses.add(instantStrategyType.calculateBonus(transaction, strategyId));
+        }
+        // TODO: 07.12.2019 пока что берём максимальный из вычисленных бонусов
+        return bonuses.isEmpty() ?
+                null :
+                bonuses.stream()
+                        .max(Comparator.comparing(Bonus::getAmount))
+                        .orElseThrow(IllegalStateException::new);
     }
 
-    private List<InstantStrategyType> getStrategies(Transaction transaction) {
+    private List<Pair<UUID, InstantStrategyType>> getStrategies(Transaction transaction) {
         UUID clientId = transaction.getClientId();
         ClientEntity client = clientRepository.findById(clientId)
                 .orElseThrow(EntityNotFoundException::new);
@@ -51,10 +61,14 @@ public class InstantStrategy implements InstantBonusesCalculateStrategy {
         List<StrategyEntity> strategies = strategyRepository
                 .findInstantStrategiesByClient(tariffPlanId, StrategyType.INSTANT.toString());
 
-        return strategies.stream()
-                .map(StrategyEntity::getSettings)
-                .map(this::convertSettingsToStrategy)
-                .collect(Collectors.toList());
+        List<Pair<UUID, InstantStrategyType>> result = new ArrayList<>();
+        for (StrategyEntity strategy : strategies) {
+            UUID strategyId = strategy.getUuid();
+            String settings = strategy.getSettings();
+            InstantStrategyType instantStrategyType = convertSettingsToStrategy(settings);
+            result.add(Pair.of(strategyId, instantStrategyType));
+        }
+        return result;
     }
 
     private InstantStrategyType convertSettingsToStrategy(String settings) {
