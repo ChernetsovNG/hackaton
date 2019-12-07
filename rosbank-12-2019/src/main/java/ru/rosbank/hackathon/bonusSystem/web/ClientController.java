@@ -1,13 +1,13 @@
 package ru.rosbank.hackathon.bonusSystem.web;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import ru.rosbank.hackathon.bonusSystem.domain.Client;
 import ru.rosbank.hackathon.bonusSystem.service.ClientService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/clients")
@@ -23,5 +23,12 @@ public class ClientController {
     @GetMapping
     public List<Client> getAll() {
         return clientService.getAllClients();
+    }
+
+    @PutMapping("/link")
+    public ResponseEntity<?> linkClientToTariffPlan(@RequestParam("clientId") UUID clientId,
+                                                    @RequestParam("tariffPlanId") UUID tariffPlanId) {
+        clientService.linkToTariffPlan(clientId, tariffPlanId);
+        return ResponseEntity.ok().build();
     }
 }
