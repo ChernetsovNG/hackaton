@@ -50,3 +50,10 @@ create table strategies
     settings       text NOT NULL,
     tariff_plan_id uuid REFERENCES tariff_plans (id) ON DELETE NO ACTION
 );
+
+create table aggregated_strategy_processing
+(
+    id          uuid PRIMARY KEY DEFAULT uuid_generate_v1(),
+    strategy_id uuid REFERENCES strategies (id) ON DELETE CASCADE,
+    next_time   timestamptz
+);
