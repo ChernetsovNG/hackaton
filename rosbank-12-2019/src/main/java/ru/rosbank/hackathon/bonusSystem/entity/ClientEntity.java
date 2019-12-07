@@ -26,7 +26,7 @@ public class ClientEntity {
     @Column(name = "tariff_plan_id")
     private UUID tariffPlanId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tariff_plan_id", nullable = false, insertable = false, updatable = false)
     private TariffPlanEntity tariffPlan;
 
@@ -35,7 +35,7 @@ public class ClientEntity {
         client.setUuid(uuid);
         client.setFirstName(firstName);
         client.setLastName(lastName);
-        client.setTariffPlan(tariffPlan.toDomain());
+        client.setTariffPlanId(tariffPlan != null ? tariffPlan.getUuid() : null);
         return client;
     }
 }

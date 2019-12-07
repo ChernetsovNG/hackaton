@@ -13,7 +13,7 @@ public class Strategy {
     private String title;
     private StrategyType type;
     private String settings;
-    private TariffPlan tariffPlan;
+    private UUID tariffPlanId;
 
     public StrategyEntity toEntity() {
         StrategyEntity entity = new StrategyEntity();
@@ -21,7 +21,7 @@ public class Strategy {
         entity.setTitle(title);
         entity.setType(type.toString());
         entity.setSettings(settings);
-        entity.setTariffPlanId(tariffPlan != null ? tariffPlan.getUuid() : null);
+        entity.setTariffPlanId(tariffPlanId);
         return entity;
     }
 }

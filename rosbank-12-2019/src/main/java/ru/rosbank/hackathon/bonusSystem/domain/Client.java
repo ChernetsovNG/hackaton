@@ -10,5 +10,5 @@ public class Client {
     private UUID uuid;
     private String firstName;
     private String lastName;
-    private TariffPlan tariffPlan;
+    private UUID tariffPlanId;
 }

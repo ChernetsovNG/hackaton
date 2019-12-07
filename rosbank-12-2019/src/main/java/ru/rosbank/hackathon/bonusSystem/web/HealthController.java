@@ -1,4 +1,4 @@
-package ru.rosbank.hackathon.bonusSystem.controller;
+package ru.rosbank.hackathon.bonusSystem.web;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

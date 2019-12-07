@@ -1,5 +1,6 @@
 package ru.rosbank.hackathon.bonusSystem.strategy;
 
 public enum StrategyType {
-    INSTANT
+    INSTANT,
+    AGGREGATE_DATE
 }

@@ -30,7 +30,7 @@ public class StrategyEntity {
     @Column(name = "tariff_plan_id")
     private UUID tariffPlanId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tariff_plan_id", nullable = false, insertable = false, updatable = false)
     private TariffPlanEntity tariffPlan;
 
@@ -40,7 +40,7 @@ public class StrategyEntity {
         strategy.setTitle(title);
         strategy.setType(StrategyType.valueOf(type));
         strategy.setSettings(settings);
-        strategy.setTariffPlan(tariffPlan != null ? tariffPlan.toDomain() : null);
+        strategy.setTariffPlanId(tariffPlan != null ? tariffPlan.getUuid() : null);
         return strategy;
     }
 }
