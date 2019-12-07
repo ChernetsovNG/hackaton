@@ -14,6 +14,7 @@ import ru.rosbank.hackathon.bonusSystem.strategy.AggregateStrategyType;
 import ru.rosbank.hackathon.bonusSystem.strategy.AggregateTimeSettings;
 import ru.rosbank.hackathon.bonusSystem.strategy.StrategyType;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -46,6 +47,13 @@ public class StrategyService {
         return allStrateries.stream()
                 .map(StrategyEntity::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Strategy get(UUID id) {
+        return strategyRepository.findById(id)
+                .map(StrategyEntity::toDomain)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional

@@ -2,10 +2,7 @@ package ru.rosbank.hackathon.bonusSystem.web;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.rosbank.hackathon.bonusSystem.domain.Bonus;
 import ru.rosbank.hackathon.bonusSystem.service.BonusService;
 
@@ -29,5 +26,10 @@ public class BonusController {
                                         @RequestParam(name = "fromDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime fromDate,
                                         @RequestParam(name = "toDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime toDate) {
         return bonusService.getClientBonuses(clientId, fromDate, toDate);
+    }
+
+    @GetMapping("/{id}")
+    public Bonus getBonus(@PathVariable("id") UUID id) {
+        return bonusService.getBonus(id);
     }
 }

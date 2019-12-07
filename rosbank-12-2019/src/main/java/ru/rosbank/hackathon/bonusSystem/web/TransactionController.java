@@ -32,4 +32,9 @@ public class TransactionController {
     public List<Transaction> getTransactions(@RequestParam(name = "clientId", required = false) UUID clientId) {
         return transactionService.getAll(clientId);
     }
+
+    @GetMapping("/{id}")
+    public Transaction get(@PathVariable("id") UUID id) {
+        return transactionService.get(id);
+    }
 }

@@ -7,6 +7,7 @@ import ru.rosbank.hackathon.bonusSystem.domain.Client;
 import ru.rosbank.hackathon.bonusSystem.entity.ClientEntity;
 import ru.rosbank.hackathon.bonusSystem.repository.ClientRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,5 +32,12 @@ public class ClientService {
     @Transactional
     public void linkToTariffPlan(UUID clientId, UUID tariffPlanId) {
         clientRepository.linkClientToTariffPlan(clientId, tariffPlanId);
+    }
+
+    @Transactional(readOnly = true)
+    public Client get(UUID id) {
+        return clientRepository.findById(id)
+                .map(ClientEntity::toDomain)
+                .orElseThrow(EntityNotFoundException::new);
     }
 }

@@ -25,6 +25,11 @@ public class ClientController {
         return clientService.getAllClients();
     }
 
+    @GetMapping("/{id}")
+    public Client get(@PathVariable("id") UUID id) {
+        return clientService.get(id);
+    }
+
     @PutMapping("/link")
     public ResponseEntity<?> linkClientToTariffPlan(@RequestParam("clientId") UUID clientId,
                                                     @RequestParam("tariffPlanId") UUID tariffPlanId) {

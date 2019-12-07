@@ -6,7 +6,9 @@ import ru.rosbank.hackathon.bonusSystem.domain.TariffPlan;
 import ru.rosbank.hackathon.bonusSystem.entity.TariffPlanEntity;
 import ru.rosbank.hackathon.bonusSystem.repository.TariffPlanRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,5 +33,12 @@ public class TariffPlanService {
         TariffPlanEntity tariffPlanEntity = tariffPlan.toEntity();
         TariffPlanEntity created = tariffPlanRepository.save(tariffPlanEntity);
         return created.toDomain();
+    }
+
+    @Transactional(readOnly = true)
+    public TariffPlan get(UUID id) {
+        return tariffPlanRepository.findById(id)
+                .map(TariffPlanEntity::toDomain)
+                .orElseThrow(EntityNotFoundException::new);
     }
 }

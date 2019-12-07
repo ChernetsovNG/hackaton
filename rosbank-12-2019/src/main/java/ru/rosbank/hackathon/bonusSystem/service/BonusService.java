@@ -12,6 +12,7 @@ import ru.rosbank.hackathon.bonusSystem.entity.BonusEntity;
 import ru.rosbank.hackathon.bonusSystem.repository.BonusRepository;
 import ru.rosbank.hackathon.bonusSystem.strategy.InstantStrategy;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -54,5 +55,12 @@ public class BonusService {
         return bonusEntities.stream()
                 .map(BonusEntity::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Bonus getBonus(UUID id) {
+        return bonusRepository.findById(id)
+                .map(BonusEntity::toDomain)
+                .orElseThrow(EntityNotFoundException::new);
     }
 }

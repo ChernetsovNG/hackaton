@@ -26,6 +26,11 @@ public class StrategyController {
         return strategyService.getAll();
     }
 
+    @GetMapping("/{id}")
+    public Strategy get(@PathVariable("id") UUID id) {
+        return strategyService.get(id);
+    }
+
     @PostMapping
     public ResponseEntity<Strategy> create(@RequestBody Strategy strategy) {
         Strategy created = strategyService.create(strategy);

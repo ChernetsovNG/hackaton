@@ -8,6 +8,7 @@ import ru.rosbank.hackathon.bonusSystem.domain.TariffPlan;
 import ru.rosbank.hackathon.bonusSystem.service.TariffPlanService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/tariffPlans")
@@ -23,6 +24,11 @@ public class TariffPlanController {
     @GetMapping
     public List<TariffPlan> getAll() {
         return tariffPlanService.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public TariffPlan get(@PathVariable("id") UUID id) {
+        return tariffPlanService.get(id);
     }
 
     @PostMapping

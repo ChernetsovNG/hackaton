@@ -6,6 +6,7 @@ import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 import ru.rosbank.hackathon.bonusSystem.entity.TransactionEntity;
 import ru.rosbank.hackathon.bonusSystem.repository.TransactionRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -39,5 +40,12 @@ public class TransactionService {
         return transactions.stream()
                 .map(TransactionEntity::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Transaction get(UUID id) {
+        return transactionRepository.findById(id)
+                .map(TransactionEntity::toDomain)
+                .orElseThrow(EntityNotFoundException::new);
     }
 }

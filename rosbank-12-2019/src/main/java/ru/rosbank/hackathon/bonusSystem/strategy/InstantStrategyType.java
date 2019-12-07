@@ -55,20 +55,14 @@ public class InstantStrategyType {
     }
 
     private Bonus calculateBonusByInterval(Transaction transaction, AmountInterval interval, UUID strategyId) {
-        BigDecimal transactionAmount = transaction.getAmount();
-        Double ratio = interval.getRatio();
-        Double amount = interval.getAmount();
-        BigDecimal bonusAmount = calculateBonusAmount(transactionAmount, ratio, amount);
-
         Bonus bonus = new Bonus();
         bonus.setUuid(UUID.randomUUID());
         bonus.setTransactions(Collections.singletonList(transaction));
         bonus.setClientId(transaction.getClientId());
-        bonus.setAmount(bonusAmount);
+        bonus.setAmount(calculateBonusAmount(transaction.getAmount(), interval.getRatio(), interval.getAmount()));
         bonus.setCreateTime(OffsetDateTime.now());
         bonus.setUpdateTime(OffsetDateTime.now());
         bonus.setStrategyId(strategyId);
-
         return bonus;
     }
 
