@@ -5,6 +5,7 @@
     "time_unit": "DAYS",
     "quantity": 7
   },
+  "aggregate_function": "SUM",
   "intervals": [
     {
       "from": 0.0,

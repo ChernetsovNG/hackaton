@@ -7,8 +7,10 @@ import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 import ru.rosbank.hackathon.bonusSystem.entity.BonusEntity;
 import ru.rosbank.hackathon.bonusSystem.entity.TransactionEntity;
 import ru.rosbank.hackathon.bonusSystem.exception.IllegalStrategyException;
+import ru.rosbank.hackathon.bonusSystem.exception.NotImplementedException;
 import ru.rosbank.hackathon.bonusSystem.repository.BonusRepository;
 import ru.rosbank.hackathon.bonusSystem.repository.TransactionRepository;
+import ru.rosbank.hackathon.bonusSystem.strategy.AggregateFunction;
 import ru.rosbank.hackathon.bonusSystem.strategy.AggregateStrategyType;
 import ru.rosbank.hackathon.bonusSystem.strategy.AggregateTimeSettings;
 import ru.rosbank.hackathon.bonusSystem.strategy.AmountInterval;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class AggregateStrategyService {
@@ -88,16 +91,17 @@ public class AggregateStrategyService {
                                  AggregateStrategyType strategy, UUID strategyId) {
         List<Integer> mccList = strategy.getMccList();
         List<AmountInterval> intervals = strategy.getIntervals();
+        AggregateFunction aggregateFunction = strategy.getAggregateFunction();
         Double minBonus = strategy.getMinBonus();
         Double maxBonus = strategy.getMaxBonus();
         Bonus bonus;
         if (mccList == null) {  // применяем ко всем MCC
-            bonus = calculateBonusByIntervals(transactions, intervals, clientId, strategyId);
+            bonus = calculateBonusByIntervals(transactions, aggregateFunction, intervals, clientId, strategyId);
         } else {  // фильтруем список транзакций по применимым к ним MCC
             transactions = transactions.stream()
                     .filter(transaction -> mccList.contains(transaction.getMcc()))
                     .collect(Collectors.toList());
-            bonus = calculateBonusByIntervals(transactions, intervals, clientId, strategyId);
+            bonus = calculateBonusByIntervals(transactions, aggregateFunction, intervals, clientId, strategyId);
         }
         // проверяем ограничения на мин. и макс. значение
         if (bonus != null) {
@@ -106,46 +110,51 @@ public class AggregateStrategyService {
         return bonus;
     }
 
-    private Bonus calculateBonusByIntervals(List<Transaction> transactions, List<AmountInterval> intervals,
-                                            UUID clientId, UUID strategyId) {
-        double transactionsSum = calculateTransactionsSum(transactions);
+    private Bonus calculateBonusByIntervals(List<Transaction> transactions, AggregateFunction aggregateFunction,
+                                            List<AmountInterval> intervals, UUID clientId, UUID strategyId) {
+        // в зависимости от аггрегирующей функции считаем либо сумму, либо количество транзакций за период
+        double comparisonValue = calculateComparisonValue(aggregateFunction, transactions);
         for (AmountInterval interval : intervals) {
-            if (interval.valueInInterval(transactionsSum)) {
-                return calculateBonusByInterval(transactions, transactionsSum, interval, clientId, strategyId);
+            if (interval.valueInInterval(comparisonValue)) {
+                return calculateBonusByInterval(transactions, comparisonValue, interval, clientId, strategyId);
             }
         }
         return null;
     }
 
-    private Bonus calculateBonusByInterval(List<Transaction> transactions, Double transactionsSum,
+    private Bonus calculateBonusByInterval(List<Transaction> transactions, Double comparisonValue,
                                            AmountInterval interval, UUID clientId, UUID strategyId) {
-        Double ratio = interval.getRatio();
-        Double amount = interval.getAmount();
-        BigDecimal bonusAmount = calculateBonusAmount(transactionsSum, ratio, amount);
-
         Bonus bonus = new Bonus();
         bonus.setUuid(UUID.randomUUID());
         bonus.setTransactions(transactions);
         bonus.setClientId(clientId);
-        bonus.setAmount(bonusAmount);
+        bonus.setAmount(calculateBonusAmount(comparisonValue, interval.getRatio(), interval.getAmount()));
         bonus.setCreateTime(OffsetDateTime.now());
         bonus.setUpdateTime(OffsetDateTime.now());
         bonus.setStrategyId(strategyId);
-
         return bonus;
     }
 
-    private double calculateTransactionsSum(List<Transaction> transactions) {
-        return transactions.stream()
-                .map(Transaction::getAmount)
-                .map(BigDecimal::doubleValue)
-                .mapToDouble(v -> v)
-                .sum();
+    private double calculateComparisonValue(AggregateFunction aggregateFunction, List<Transaction> transactions) {
+        Stream<Transaction> stream = transactions.stream();
+        switch (aggregateFunction) {
+            case SUM:
+                return stream
+                        .map(Transaction::getAmount)
+                        .map(BigDecimal::doubleValue)
+                        .mapToDouble(v -> v)
+                        .sum();
+            case COUNT:
+                return stream
+                        .count();
+            default:
+                throw new NotImplementedException("AggregateFunction = " + aggregateFunction + " not implemented yet");
+        }
     }
 
-    private BigDecimal calculateBonusAmount(Double transactionsSum, Double ratio, Double amount) {
+    private BigDecimal calculateBonusAmount(Double comparisonValue, Double ratio, Double amount) {
         if (ratio != null) {
-            return BigDecimal.valueOf(transactionsSum * ratio);
+            return BigDecimal.valueOf(comparisonValue * ratio);
         } else if (amount != null) {
             return BigDecimal.valueOf(amount);
         } else {

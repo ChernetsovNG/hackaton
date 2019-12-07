@@ -71,7 +71,7 @@ public class StrategyService {
 
     @Scheduled(fixedRate = 60_000L)
     @Transactional
-    public void aggregatedStrategyStarter() {
+    public void aggregatedStrategyProcess() {
         // Находим стратегии, готовые к следующему запуску
         List<AggregatedStrategyProcessingEntity> readyToStartStrategies = aggregatedStrategyProcessingRepository
                 .findAllByNextTimeIsLessThanEqual(OffsetDateTime.now());
