@@ -28,8 +28,23 @@ create table bonuses_transactions
     CONSTRAINT bonuses_transactions_pkey PRIMARY KEY (bonus_uuid, transaction_uuid)
 );
 
+create table tariff_plans (
+                              id uuid PRIMARY KEY DEFAULT uuid_generate_v1(),
+                              title text
+);
+
+create table clients (
+                         id uuid PRIMARY KEY,
+                         first_name text,
+                         last_name text,
+                         tariff_plan_id  uuid  REFERENCES tariff_plans (id) ON DELETE NO ACTION
+);
+
 create table strategies
 (
     id    uuid PRIMARY KEY,
-    title text NOT NULL
+    title text NOT NULL,
+    type  text NOT NULL,
+    settings text NOT NULL,
+    tariff_plan_id uuid REFERENCES  tariff_plans (id) ON DELETE NO ACTION
 );
