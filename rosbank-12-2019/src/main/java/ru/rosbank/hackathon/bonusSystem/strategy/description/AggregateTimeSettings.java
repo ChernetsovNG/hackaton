@@ -28,7 +28,7 @@ public class AggregateTimeSettings {
     private AggregateTimeUnit timeUnit;
 
     /**
-     * Количество временных единиц, после прошествия которых нужно повторть запланированную задачу
+     * Количество временных единиц, после прошествия которых нужно повторить запланированную задачу
      */
     @JsonProperty("quantity")
     private Integer quantity;

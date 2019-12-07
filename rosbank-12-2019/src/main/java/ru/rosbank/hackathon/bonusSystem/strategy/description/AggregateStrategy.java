@@ -12,9 +12,15 @@ import static ru.rosbank.hackathon.bonusSystem.config.JsonConfig.OBJECT_MAPPER;
 @Data
 public class AggregateStrategy {
 
+    /**
+     * Временные настройки агрегирующей стратегии (вида, "каждые 5 дней", "каждые 3 недели", и т.д.)
+     */
     @JsonProperty("aggregate_time_settings")
     private AggregateTimeSettings timeSettings;
 
+    /**
+     * Тип агрегатной функции, применяемой к транзакциями во временном интервале
+     */
     @JsonProperty("aggregate_function")
     private AggregateFunction aggregateFunction;
 
@@ -29,9 +35,9 @@ public class AggregateStrategy {
     @JsonProperty("max_bonus")
     private Double maxBonus;
 
-    public static AggregateStrategy convertSettingsToStrategy(String settings) {
+    public static AggregateStrategy convertSettingsToStrategy(String settingsJson) {
         try {
-            return OBJECT_MAPPER.readValue(settings, AggregateStrategy.class);
+            return OBJECT_MAPPER.readValue(settingsJson, AggregateStrategy.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
