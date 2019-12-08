@@ -53,6 +53,9 @@ public class AggregateBonusesCalculateStrategyImpl implements BonusesCalculateSt
         // Находим стратегии, готовые к следующему запуску
         List<AggregatedStrategyProcessingEntity> readyToStartStrategies = aggregatedStrategyProcessingRepository
                 .findAllByNextTimeIsLessThanEqual(OffsetDateTime.now());
+        if (readyToStartStrategies.isEmpty()) {
+            return;
+        }
         List<AggregateStrategy> strategies = readyToStartStrategies.stream()
                 .map(AggregatedStrategyProcessingEntity::getStrategy)
                 .map(StrategyEntity::getSettings)

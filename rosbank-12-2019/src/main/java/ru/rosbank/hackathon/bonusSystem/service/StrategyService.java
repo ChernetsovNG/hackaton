@@ -1,5 +1,6 @@
 package ru.rosbank.hackathon.bonusSystem.service;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +59,18 @@ public class StrategyService {
             planScheduledPerform(created, strategy.getSettings());
         }
         return created.toDomain();
+    }
+
+    @Scheduled(fixedRate = 60_000L)
+    @Transactional
+    public void planningAggregateStrategy() {
+        List<StrategyEntity> aggregateStrategies = strategyRepository.findAllByType("AGGREGATE_DATE");
+        aggregateStrategies.forEach(strategyEntity -> {
+            // если она ещё не была запланирована, то планируем
+            if (!aggregatedStrategyProcessingRepository.existsByStrategy(strategyEntity)) {
+                planScheduledPerform(strategyEntity, strategyEntity.getSettings());
+            }
+        });
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

@@ -12,7 +12,6 @@ import ru.rosbank.hackathon.bonusSystem.strategy.enums.StrategyType;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,9 +32,9 @@ public class UtilsTest {
 
         InstantStrategy instantStrategy = new InstantStrategy();
         List<AmountInterval> intervals = new ArrayList<>();
-        intervals.add(new AmountInterval(0.0, null, 0.05, null));
+        intervals.add(new AmountInterval(0.0, null, 0.02, null));
         instantStrategy.setIntervals(intervals);
-        instantStrategy.setMccList(Arrays.asList(1234, 5678, 6543));
+        instantStrategy.setMccList(null);
         instantStrategy.setMinBonus(null);
         instantStrategy.setMaxBonus(null);
 
@@ -53,19 +52,16 @@ public class UtilsTest {
     public void aggregatedStrategyTypeTest() throws JsonProcessingException {
         AggregateStrategy aggregateStrategy = new AggregateStrategy();
         List<AmountInterval> intervals = new ArrayList<>();
-        intervals.add(new AmountInterval(0.0, 500.0, 0.01, null));
-        intervals.add(new AmountInterval(500.0, 2000.0, 0.02, null));
-        intervals.add(new AmountInterval(2000.0, 5000.0, 0.05, null));
-        intervals.add(new AmountInterval(5000.0, null, null, 12.0));
+        intervals.add(new AmountInterval(20.0, null, null, 2000.0));
         aggregateStrategy.setIntervals(intervals);
-        aggregateStrategy.setMccList(Arrays.asList(5111, 2738, 3921));
+        aggregateStrategy.setMccList(null);
         aggregateStrategy.setMinBonus(null);
-        aggregateStrategy.setMaxBonus(10.0);
+        aggregateStrategy.setMaxBonus(null);
 
         AggregateTimeSettings timeSettings = new AggregateTimeSettings();
-        timeSettings.setFromTime(OffsetDateTime.now().plusMinutes(5));
-        timeSettings.setQuantity(5);
-        timeSettings.setTimeUnit(AggregateTimeUnit.MINUTES);
+        timeSettings.setFromTime(OffsetDateTime.now().minusMonths(1).minusMinutes(10));
+        timeSettings.setQuantity(30);
+        timeSettings.setTimeUnit(AggregateTimeUnit.DAYS);
         aggregateStrategy.setTimeSettings(timeSettings);
 
         Strategy strategy = new Strategy();

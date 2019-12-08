@@ -3,6 +3,7 @@ package ru.rosbank.hackathon.bonusSystem.strategy.description;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Data;
+import ru.rosbank.hackathon.bonusSystem.exception.IllegalStrategyException;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class InstantStrategy {
         try {
             return OBJECT_MAPPER.readValue(settings, InstantStrategy.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStrategyException(e);
         }
     }
 }

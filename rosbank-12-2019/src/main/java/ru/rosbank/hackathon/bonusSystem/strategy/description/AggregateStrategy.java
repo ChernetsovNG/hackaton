@@ -3,6 +3,7 @@ package ru.rosbank.hackathon.bonusSystem.strategy.description;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.Data;
+import ru.rosbank.hackathon.bonusSystem.exception.IllegalStrategyException;
 import ru.rosbank.hackathon.bonusSystem.strategy.enums.AggregateFunction;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class AggregateStrategy {
         try {
             return OBJECT_MAPPER.readValue(settings, AggregateStrategy.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStrategyException(e);
         }
     }
 }

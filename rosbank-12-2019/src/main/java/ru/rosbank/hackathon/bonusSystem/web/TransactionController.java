@@ -28,7 +28,7 @@ public class TransactionController {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @PostMapping
+    @PostMapping("/list")
     public ResponseEntity<List<Transaction>> createTransactions(@RequestBody List<Transaction> transactions) {
         List<Transaction> created = transactionService.createAll(transactions);
         return new ResponseEntity<>(created, HttpStatus.CREATED);

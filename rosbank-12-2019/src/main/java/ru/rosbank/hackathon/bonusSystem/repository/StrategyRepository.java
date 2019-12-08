@@ -21,4 +21,6 @@ public interface StrategyRepository extends JpaRepository<StrategyEntity, UUID> 
     @Modifying
     @Query("update StrategyEntity s set s.tariffPlanId = :tariffPlanId WHERE s.uuid = :strategyId")
     void linkStrategyToTariffPlan(@Param("strategyId") UUID strategyId, @Param("tariffPlanId") UUID tariffPlanId);
+
+    List<StrategyEntity> findAllByType(String type);
 }
