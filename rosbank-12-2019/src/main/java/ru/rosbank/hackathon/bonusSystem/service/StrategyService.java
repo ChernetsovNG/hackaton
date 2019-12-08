@@ -86,4 +86,11 @@ public class StrategyService {
         int minutes = timeSettings.getTimeUnit().getMinutes();
         return fromTime.plus(quantity * minutes, ChronoUnit.MINUTES);
     }
+
+    @Transactional
+    public Strategy update(Strategy strategy) {
+        StrategyEntity strategyEntity = strategy.toEntity();
+        StrategyEntity updatedEntity = strategyRepository.save(strategyEntity);
+        return updatedEntity.toDomain();
+    }
 }

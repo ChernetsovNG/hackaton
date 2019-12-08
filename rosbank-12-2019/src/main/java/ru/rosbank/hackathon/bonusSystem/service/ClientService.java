@@ -60,7 +60,7 @@ public class ClientService {
 
     @Transactional
     public List<ClientAggregate> getAllClientAggregates() {
-        return jdbcTemplate.query(CLIENT_AGGREGATES_QUERY, (rs, rowNum) -> {
+        List<ClientAggregate> clientAggregates = jdbcTemplate.query(CLIENT_AGGREGATES_QUERY, (rs, rowNum) -> {
             ClientAggregate clientAggregate = new ClientAggregate();
             Client client = new Client();
             String clientId = rs.getString("client_id");
@@ -76,10 +76,11 @@ public class ClientService {
             clientAggregate.setBonusCount(bonusCount);
             return clientAggregate;
         });
+        addTariffPlanToClients(clientAggregates);
+        return clientAggregates;
     }
 
-    @Transactional(readOnly = true)
-    public void addTariffPlanToClients(List<ClientAggregate> clientAggregates) {
+    private void addTariffPlanToClients(List<ClientAggregate> clientAggregates) {
         if (clientAggregates.isEmpty()) {
             return;
         }

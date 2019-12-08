@@ -37,6 +37,11 @@ public class StrategyController {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
+    @PutMapping
+    public Strategy updateDescription(@RequestBody Strategy strategy) {
+        return strategyService.update(strategy);
+    }
+
     @PutMapping("/link")
     public ResponseEntity<?> linkStrategyToTariffPlan(@RequestParam("strategyId") UUID strategyId,
                                                       @RequestParam("tariffPlanId") UUID tariffPlanId) {

@@ -40,8 +40,6 @@ public class ClientController {
 
     @GetMapping("/aggregates")
     public List<ClientAggregate> getClientsWithData() {
-        List<ClientAggregate> clientAggregates = clientService.getAllClientAggregates();
-        clientService.addTariffPlanToClients(clientAggregates);
-        return clientAggregates;
+        return clientService.getAllClientAggregates();
     }
 }
