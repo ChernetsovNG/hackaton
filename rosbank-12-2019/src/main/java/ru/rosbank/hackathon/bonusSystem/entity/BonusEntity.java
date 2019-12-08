@@ -39,6 +39,9 @@ public class BonusEntity {
     @Column(name = "strategy_id")
     private UUID strategyId;
 
+    @Column(name = "time_to_live")
+    private OffsetDateTime timeToLive;
+
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "bonuses_transactions",
@@ -57,6 +60,7 @@ public class BonusEntity {
         bonus.setCreateTime(createTime);
         bonus.setUpdateTime(updateTime);
         bonus.setStrategyId(strategyId);
+        bonus.setTimeToLive(timeToLive);
         return bonus;
     }
 }

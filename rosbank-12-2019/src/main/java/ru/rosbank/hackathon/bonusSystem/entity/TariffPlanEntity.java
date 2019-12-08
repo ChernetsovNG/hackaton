@@ -34,9 +34,11 @@ public class TariffPlanEntity {
         TariffPlan tariffPlan = new TariffPlan();
         tariffPlan.setTitle(title);
         tariffPlan.setUuid(uuid);
-        tariffPlan.setStrategies(strategies.stream()
-                .map(StrategyEntity::toDomain)
-                .collect(Collectors.toList()));
+        if (strategies != null) {
+            tariffPlan.setStrategies(strategies.stream()
+                    .map(StrategyEntity::toDomain)
+                    .collect(Collectors.toList()));
+        }
         return tariffPlan;
     }
 }

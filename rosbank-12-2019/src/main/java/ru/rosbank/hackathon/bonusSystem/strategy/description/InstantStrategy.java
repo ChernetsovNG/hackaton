@@ -22,6 +22,9 @@ public class InstantStrategy {
     @JsonProperty("max_bonus")
     private Double maxBonus;
 
+    @JsonProperty("bonus_max_age_ms")
+    private Long bonusMaxAgeMs;
+
     public static InstantStrategy convertSettingsToStrategy(String settings) {
         try {
             return OBJECT_MAPPER.readValue(settings, InstantStrategy.class);

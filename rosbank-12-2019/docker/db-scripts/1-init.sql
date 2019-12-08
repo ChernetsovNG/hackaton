@@ -13,12 +13,13 @@ create table transactions
 
 create table bonuses
 (
-    id          uuid PRIMARY KEY DEFAULT uuid_generate_v1(),
-    client_id   uuid,
-    amount      numeric(15, 2),
-    create_time timestamptz,
-    update_time timestamptz,
-    strategy_id uuid
+    id           uuid PRIMARY KEY DEFAULT uuid_generate_v1(),
+    client_id    uuid,
+    amount       numeric(15, 2),
+    create_time  timestamptz,
+    update_time  timestamptz,
+    strategy_id  uuid,
+    time_to_live timestamptz
 );
 
 create table bonuses_transactions

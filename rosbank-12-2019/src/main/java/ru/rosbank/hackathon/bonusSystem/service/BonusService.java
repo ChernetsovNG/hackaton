@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.rosbank.hackathon.bonusSystem.domain.Bonus;
@@ -73,6 +74,22 @@ public class BonusService {
         return bonusRepository.findById(id)
                 .map(BonusEntity::toDomain)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional
+    @Scheduled(fixedRate = 60_000L)
+    public void clearOldBonuses() {
+        List<BonusEntity> bonuses = bonusRepository.findAllByTimeToLiveNotNull();
+        if (bonuses.isEmpty()) {
+            return;
+        }
+        OffsetDateTime now = OffsetDateTime.now();
+        List<BonusEntity> oldBonuses = bonuses.stream()
+                .filter(bonusEntity -> bonusEntity.getTimeToLive().isBefore(now))
+                .collect(Collectors.toList());
+        if (!oldBonuses.isEmpty()) {
+            bonusRepository.deleteAll(oldBonuses);
+        }
     }
 
     private void fillByStrategies(List<Bonus> bonuses) {

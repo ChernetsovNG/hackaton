@@ -19,4 +19,6 @@ public interface BonusRepository extends JpaRepository<BonusEntity, UUID> {
 
     List<BonusEntity> findAllByClientIdAndCreateTimeGreaterThanEqualAndCreateTimeLessThanEqual(
             UUID clientId, OffsetDateTime fromDate, OffsetDateTime toDate);
+
+    List<BonusEntity> findAllByTimeToLiveNotNull();
 }

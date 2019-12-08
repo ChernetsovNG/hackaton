@@ -29,6 +29,9 @@ public class AggregateStrategy {
     @JsonProperty("max_bonus")
     private Double maxBonus;
 
+    @JsonProperty("bonus_max_age_ms")
+    private Long bonusMaxAgeMs;
+
     public static AggregateStrategy convertSettingsToStrategy(String settings) {
         try {
             return OBJECT_MAPPER.readValue(settings, AggregateStrategy.class);

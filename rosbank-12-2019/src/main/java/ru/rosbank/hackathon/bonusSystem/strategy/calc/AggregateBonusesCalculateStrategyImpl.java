@@ -164,6 +164,7 @@ public class AggregateBonusesCalculateStrategyImpl implements BonusesCalculateSt
         AggregateFunction aggregateFunction = strategy.getAggregateFunction();
         Double minBonus = strategy.getMinBonus();
         Double maxBonus = strategy.getMaxBonus();
+        Long bonusMaxAgeMs = strategy.getBonusMaxAgeMs();
         Bonus bonus;
         if (mccList == null) {  // применяем ко всем MCC
             bonus = calculateBonusByIntervals(transactions, aggregateFunction, intervals, clientId, strategyId);
@@ -176,6 +177,9 @@ public class AggregateBonusesCalculateStrategyImpl implements BonusesCalculateSt
         // проверяем ограничения на мин. и макс. значение
         if (bonus != null) {
             bonus.checkThresholdValues(minBonus, maxBonus);
+        }
+        if (bonus != null && bonusMaxAgeMs != null) {
+            bonus.setTimeToLive(bonus.getCreateTime().plus(bonusMaxAgeMs, ChronoUnit.MILLIS));
         }
         return bonus;
     }

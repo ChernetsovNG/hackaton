@@ -41,6 +41,8 @@ public class Bonus {
      */
     private UUID strategyId;
 
+    private OffsetDateTime timeToLive;
+
     private Strategy strategy;
 
     public BonusEntity toEntity() {
@@ -51,9 +53,12 @@ public class Bonus {
         entity.setCreateTime(createTime);
         entity.setUpdateTime(updateTime);
         entity.setStrategyId(strategyId);
-        entity.setTransactions(transactions.stream()
-                .map(Transaction::toEntity)
-                .collect(Collectors.toList()));
+        if (transactions != null) {
+            entity.setTransactions(transactions.stream()
+                    .map(Transaction::toEntity)
+                    .collect(Collectors.toList()));
+        }
+        entity.setTimeToLive(timeToLive);
         return entity;
     }
 

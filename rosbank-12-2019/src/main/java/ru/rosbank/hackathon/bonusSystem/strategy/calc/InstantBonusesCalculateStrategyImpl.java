@@ -16,6 +16,7 @@ import ru.rosbank.hackathon.bonusSystem.strategy.enums.StrategyType;
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -77,6 +78,7 @@ public class InstantBonusesCalculateStrategyImpl implements InstantBonusesCalcul
         List<Integer> mccList = strategy.getMccList();
         Double minBonus = strategy.getMinBonus();
         Double maxBonus = strategy.getMaxBonus();
+        Long bonusMaxAgeMs = strategy.getBonusMaxAgeMs();
         Bonus bonus;
         if (mccList == null) {  // применяем ко всем MCC
             bonus = calculateBonusByIntervals(transaction, strategyId, intervals);
@@ -90,6 +92,10 @@ public class InstantBonusesCalculateStrategyImpl implements InstantBonusesCalcul
         // проверяем ограничения на мин. и макс. значение
         if (bonus != null) {
             bonus.checkThresholdValues(minBonus, maxBonus);
+        }
+        // сохраняем время жизни бонуса
+        if (bonus != null && bonusMaxAgeMs != null) {
+            bonus.setTimeToLive(bonus.getCreateTime().plus(bonusMaxAgeMs, ChronoUnit.MILLIS));
         }
         return bonus;
     }
