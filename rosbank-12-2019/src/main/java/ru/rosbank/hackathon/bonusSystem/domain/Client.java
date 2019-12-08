@@ -2,7 +2,6 @@ package ru.rosbank.hackathon.bonusSystem.domain;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -13,4 +12,8 @@ public class Client {
     private String lastName;
     private TariffPlan tariffPlan;
 
+    /**
+     * Идентификатор тарифного плана, по которому клиенту начисляются бонусы
+     */
+    private UUID tariffPlanId;
 }

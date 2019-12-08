@@ -8,25 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AmountInterval {
-
-    /**
-     * Нижняя граница интервала
-     */
     private Double from;
-
-    /**
-     * Верхняя граница интервала
-     */
     private Double to;
-
-    /**
-     * Процентное соотношение (коэффициент для расчёта начисляемых бонусов)
-     */
     private Double ratio;
-
-    /**
-     * Конкретное заданное значение начисляемых бонусов
-     */
     private Double amount;
 
     public boolean valueInInterval(Double value) {
