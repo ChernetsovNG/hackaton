@@ -41,6 +41,8 @@ public class Bonus {
      */
     private UUID strategyId;
 
+    private Strategy strategy;
+
     public BonusEntity toEntity() {
         BonusEntity entity = new BonusEntity();
         entity.setUuid(uuid);

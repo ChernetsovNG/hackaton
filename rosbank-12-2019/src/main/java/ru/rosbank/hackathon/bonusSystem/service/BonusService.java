@@ -7,15 +7,18 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.rosbank.hackathon.bonusSystem.domain.Bonus;
+import ru.rosbank.hackathon.bonusSystem.domain.Strategy;
 import ru.rosbank.hackathon.bonusSystem.domain.Transaction;
 import ru.rosbank.hackathon.bonusSystem.entity.BonusEntity;
+import ru.rosbank.hackathon.bonusSystem.entity.StrategyEntity;
 import ru.rosbank.hackathon.bonusSystem.repository.BonusRepository;
+import ru.rosbank.hackathon.bonusSystem.repository.StrategyRepository;
 import ru.rosbank.hackathon.bonusSystem.strategy.calc.InstantBonusesCalculateStrategyImpl;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,10 +27,14 @@ public class BonusService {
 
     private final BonusRepository bonusRepository;
 
+    private final StrategyRepository strategyRepository;
+
     private final InstantBonusesCalculateStrategyImpl instantBonusesCalculateStrategyImpl;
 
-    public BonusService(BonusRepository bonusRepository, InstantBonusesCalculateStrategyImpl instantBonusesCalculateStrategyImpl) {
+    public BonusService(BonusRepository bonusRepository, StrategyRepository strategyRepository,
+                        InstantBonusesCalculateStrategyImpl instantBonusesCalculateStrategyImpl) {
         this.bonusRepository = bonusRepository;
+        this.strategyRepository = strategyRepository;
         this.instantBonusesCalculateStrategyImpl = instantBonusesCalculateStrategyImpl;
     }
 
@@ -54,9 +61,11 @@ public class BonusService {
             bonusEntities = bonusRepository.findAllByClientIdAndCreateTimeGreaterThanEqualAndCreateTimeLessThanEqual(
                     clientId, fromDate, toDate);
         }
-        return bonusEntities.stream()
+        List<Bonus> bonuses = bonusEntities.stream()
                 .map(BonusEntity::toDomain)
                 .collect(Collectors.toList());
+        fillByStrategies(bonuses);
+        return bonuses;
     }
 
     @Transactional(readOnly = true)
@@ -64,5 +73,26 @@ public class BonusService {
         return bonusRepository.findById(id)
                 .map(BonusEntity::toDomain)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    private void fillByStrategies(List<Bonus> bonuses) {
+        if (bonuses.isEmpty()) {
+            return;
+        }
+        Set<UUID> strategyIds = bonuses.stream()
+                .map(Bonus::getStrategyId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        List<StrategyEntity> strategyEntities = strategyRepository.findAllById(strategyIds);
+        Map<UUID, Strategy> strategiesMap = strategyEntities.stream()
+                .map(StrategyEntity::toDomain)
+                .collect(Collectors.toMap(Strategy::getUuid, Function.identity()));
+        for (Bonus bonus : bonuses) {
+            UUID strategyId = bonus.getStrategyId();
+            if (strategyId != null) {
+                Strategy strategy = strategiesMap.get(strategyId);
+                bonus.setStrategy(strategy);
+            }
+        }
     }
 }

@@ -12,9 +12,7 @@ import ru.rosbank.hackathon.bonusSystem.repository.ClientRepository;
 import ru.rosbank.hackathon.bonusSystem.repository.TariffPlanRepository;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -84,9 +82,10 @@ public class ClientService {
         if (clientAggregates.isEmpty()) {
             return;
         }
-        List<UUID> tariffPlanIds = clientAggregates.stream()
+        Set<UUID> tariffPlanIds = clientAggregates.stream()
                 .map(clientAggregate -> clientAggregate.getClient().getTariffPlanId())
-                .collect(Collectors.toList());
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
         List<TariffPlanEntity> tariffPlanEntities = tariffPlanRepository.findAllById(tariffPlanIds);
         Map<UUID, TariffPlan> tariffPlansMap = tariffPlanEntities.stream()
                 .map(TariffPlanEntity::toDomain)
