@@ -83,8 +83,7 @@ public class BonusService {
                 .map(Bonus::getStrategyId)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
-        List<StrategyEntity> strategyEntities = strategyRepository.findAllById(strategyIds);
-        Map<UUID, Strategy> strategiesMap = strategyEntities.stream()
+        Map<UUID, Strategy> strategiesMap = strategyRepository.findAllById(strategyIds).stream()
                 .map(StrategyEntity::toDomain)
                 .collect(Collectors.toMap(Strategy::getUuid, Function.identity()));
         for (Bonus bonus : bonuses) {

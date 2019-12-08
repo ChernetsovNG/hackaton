@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 @Data
 public class TariffPlanEntity {
 
+    public static final String DEFAULT_TARIFF_PLAN_NAME = "default";
+
     @Id
     @Type(type = "pg-uuid")
     @Column(name = "id")

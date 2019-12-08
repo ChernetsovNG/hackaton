@@ -69,16 +69,18 @@ public class ClientService {
             client.setUuid(UUID.fromString(clientId));
             client.setFirstName(firstName);
             client.setLastName(lastName);
-            client.setTariffPlanId(UUID.fromString(tariffPlanId));
+            if (tariffPlanId != null) {
+                client.setTariffPlanId(UUID.fromString(tariffPlanId));
+            }
             clientAggregate.setClient(client);
             clientAggregate.setBonusCount(bonusCount);
             return clientAggregate;
         });
-        addTariffPlanToClients(clientAggregates);
+        fillClientByTariffPlans(clientAggregates);
         return clientAggregates;
     }
 
-    private void addTariffPlanToClients(List<ClientAggregate> clientAggregates) {
+    private void fillClientByTariffPlans(List<ClientAggregate> clientAggregates) {
         if (clientAggregates.isEmpty()) {
             return;
         }
@@ -86,8 +88,7 @@ public class ClientService {
                 .map(clientAggregate -> clientAggregate.getClient().getTariffPlanId())
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
-        List<TariffPlanEntity> tariffPlanEntities = tariffPlanRepository.findAllById(tariffPlanIds);
-        Map<UUID, TariffPlan> tariffPlansMap = tariffPlanEntities.stream()
+        Map<UUID, TariffPlan> tariffPlansMap = tariffPlanRepository.findAllById(tariffPlanIds).stream()
                 .map(TariffPlanEntity::toDomain)
                 .collect(Collectors.toMap(TariffPlan::getUuid, Function.identity()));
 
