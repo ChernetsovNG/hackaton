@@ -3,6 +3,7 @@ package ru.rosbank.hackathon.bonusSystem.web;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.rosbank.hackathon.bonusSystem.aggregate.ClientAggregate;
 import ru.rosbank.hackathon.bonusSystem.domain.Client;
 import ru.rosbank.hackathon.bonusSystem.service.ClientService;
 
@@ -35,5 +36,12 @@ public class ClientController {
                                                     @RequestParam("tariffPlanId") UUID tariffPlanId) {
         clientService.linkToTariffPlan(clientId, tariffPlanId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/aggregates")
+    public List<ClientAggregate> getClientsWithData() {
+        List<ClientAggregate> clientAggregates = clientService.getAllClientAggregates();
+        clientService.addTariffPlanToClients(clientAggregates);
+        return clientAggregates;
     }
 }

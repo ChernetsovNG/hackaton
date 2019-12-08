@@ -31,10 +31,7 @@ public class ClientEntity {
     @JoinColumn(name = "tariff_plan_id", nullable = false, insertable = false, updatable = false)
     private TariffPlanEntity tariffPlan;
 
-
-
     public Client toDomain() {
-
         Client client = new Client();
         client.setUuid(uuid);
         client.setFirstName(firstName);

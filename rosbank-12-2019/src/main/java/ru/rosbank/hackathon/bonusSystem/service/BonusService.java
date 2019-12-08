@@ -35,8 +35,10 @@ public class BonusService {
     @Transactional
     public void onTransactionEvent(ConsumerRecord<String, Transaction> consumerRecord, @Payload Transaction transaction) {
         Bonus bonus = instantBonusesCalculateStrategyImpl.calculate(transaction);
-        BonusEntity bonusEntity = bonus.toEntity();
-        bonusRepository.save(bonusEntity);
+        if (bonus != null) {
+            BonusEntity bonusEntity = bonus.toEntity();
+            bonusRepository.save(bonusEntity);
+        }
     }
 
     @Transactional(readOnly = true)
