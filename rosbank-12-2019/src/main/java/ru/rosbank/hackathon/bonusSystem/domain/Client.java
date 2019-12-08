@@ -11,14 +11,6 @@ public class Client {
     private UUID uuid;
     private String firstName;
     private String lastName;
+    private TariffPlan tariffPlan;
 
-    /**
-     * Идентификатор тарифного плана, по которому клиенту начисляются бонусы
-     */
-    private UUID tariffPlanId;
-
-
-    public ClientResponse toClientResponse(BigDecimal bonusAmount) {
-        return new ClientResponse(this, bonusAmount);
-    }
 }

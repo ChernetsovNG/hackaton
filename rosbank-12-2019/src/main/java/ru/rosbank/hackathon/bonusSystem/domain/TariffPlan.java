@@ -11,7 +11,6 @@ public class TariffPlan {
 
     private UUID uuid;
     private String title;
-    private List<Client> clients;
     private List<Strategy> strategies;
 
     public TariffPlanEntity toEntity() {
