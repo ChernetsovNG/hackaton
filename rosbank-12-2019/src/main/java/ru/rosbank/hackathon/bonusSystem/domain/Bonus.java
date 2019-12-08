@@ -58,6 +58,9 @@ public class Bonus {
     }
 
     public void checkThresholdValues(Double minBonus, Double maxBonus) {
+        if (amount == null || (minBonus == null && maxBonus == null)) {
+            return;
+        }
         if (minBonus != null && maxBonus == null) {
             if (amount.compareTo(BigDecimal.valueOf(minBonus)) < 0) {
                 setAmount(BigDecimal.valueOf(minBonus));

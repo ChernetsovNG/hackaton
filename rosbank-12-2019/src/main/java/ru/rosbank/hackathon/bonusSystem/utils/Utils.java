@@ -31,8 +31,8 @@ public class Utils {
     public static void createTransactionsFile() {
         List<Transaction> transactions = new ArrayList<>();
         Map<UUID, Client> clients = new HashMap<>();
-        Client client1 = createClient("Nikita1", "Chernetsov1");
-        Client client2 = createClient("Ilon1", "Mask1");
+        Client client1 = createClient("a7bdcfbe-19a7-11ea-9927-0242ac110002", "Nikita", "Chernetsov");
+        Client client2 = createClient("Ilon", "Mask");
         clients.put(client1.getUuid(), client1);
         clients.put(client2.getUuid(), client2);
         for (int i = 0; i < 10; i++) {
@@ -57,6 +57,14 @@ public class Utils {
     private static Client createClient(String firstName, String lastName) {
         Client client = new Client();
         client.setUuid(UUID.randomUUID());
+        client.setFirstName(firstName);
+        client.setLastName(lastName);
+        return client;
+    }
+
+    private static Client createClient(String uuid, String firstName, String lastName) {
+        Client client = new Client();
+        client.setUuid(UUID.fromString(uuid));
         client.setFirstName(firstName);
         client.setLastName(lastName);
         return client;
