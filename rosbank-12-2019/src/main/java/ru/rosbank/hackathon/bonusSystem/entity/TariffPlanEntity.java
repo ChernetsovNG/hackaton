@@ -32,9 +32,6 @@ public class TariffPlanEntity {
         TariffPlan tariffPlan = new TariffPlan();
         tariffPlan.setTitle(title);
         tariffPlan.setUuid(uuid);
-        tariffPlan.setClients(clients.stream()
-                .map(ClientEntity::toDomain)
-                .collect(Collectors.toList()));
         tariffPlan.setStrategies(strategies.stream()
                 .map(StrategyEntity::toDomain)
                 .collect(Collectors.toList()));

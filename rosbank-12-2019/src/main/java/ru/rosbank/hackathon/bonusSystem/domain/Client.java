@@ -11,8 +11,5 @@ public class Client {
     private String firstName;
     private String lastName;
 
-    /**
-     * Идентификатор тарифного плана, по которому клиенту начисляются бонусы
-     */
-    private UUID tariffPlanId;
+    private TariffPlan tariffPlan;
 }
