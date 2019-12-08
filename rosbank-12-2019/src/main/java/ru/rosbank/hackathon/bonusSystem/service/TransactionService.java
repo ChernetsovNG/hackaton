@@ -32,6 +32,19 @@ public class TransactionService {
         return createdTransaction;
     }
 
+    @Transactional
+    public List<Transaction> createAll(List<Transaction> transactions) {
+        List<TransactionEntity> transactionEntities = transactions.stream()
+                .map(Transaction::toEntity)
+                .collect(Collectors.toList());
+        List<TransactionEntity> created = transactionRepository.saveAll(transactionEntities);
+        List<Transaction> createdTransactions = created.stream()
+                .map(TransactionEntity::toDomain)
+                .collect(Collectors.toList());
+        createdTransactions.forEach(kafkaProducerService::sendTransactionEvent);
+        return createdTransactions;
+    }
+
     @Transactional(readOnly = true)
     public List<Transaction> getAll(UUID clientId) {
         List<TransactionEntity> transactions = clientId != null ?

@@ -28,6 +28,12 @@ public class TransactionController {
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
+    @PostMapping
+    public ResponseEntity<List<Transaction>> createTransactions(@RequestBody List<Transaction> transactions) {
+        List<Transaction> created = transactionService.createAll(transactions);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
+    }
+
     @GetMapping
     public List<Transaction> getTransactions(@RequestParam(name = "clientId", required = false) UUID clientId) {
         return transactionService.getAll(clientId);
