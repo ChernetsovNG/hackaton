@@ -59,7 +59,6 @@ public class FileService {
     @Scheduled(fixedRateString = "${data.scan-frequency-ms}")
     public void readDataFile() {
         String folder = dataProperties.getFolder();
-        log.debug("readDataFile: folder = {}", folder);
         try (Stream<Path> paths = Files.walk(Paths.get(folder))) {
             Map<String, List<Path>> filesByExtension = paths
                     .filter(Files::isRegularFile)
