@@ -1,0 +1,9 @@
+function ctrl_c() {
+        printf "\n Shutting docker containers down...\n"
+        docker-compose -f docker/docker-compose.yml down
+}
+
+trap ctrl_c INT
+
+docker-compose -f docker/docker-compose.yml up -d
+java -jar build/libs/bonus-system-0.0.1-SNAPSHOT.jar

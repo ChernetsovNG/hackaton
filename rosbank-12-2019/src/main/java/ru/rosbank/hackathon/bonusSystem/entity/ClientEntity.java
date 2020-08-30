@@ -36,7 +36,7 @@ public class ClientEntity {
         client.setUuid(uuid);
         client.setFirstName(firstName);
         client.setLastName(lastName);
-
+        client.setTariffPlanId(tariffPlanId);
         client.setTariffPlan(tariffPlan.toDomain());
 
         return client;

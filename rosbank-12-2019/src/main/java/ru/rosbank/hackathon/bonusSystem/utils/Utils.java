@@ -20,7 +20,7 @@ import static ru.rosbank.hackathon.bonusSystem.utils.TransactionExt.convertToExt
 
 public class Utils {
 
-    private static final String FILE_NAME = "/home/nchernetsov/Education/hackaton/rosbank-12-2019/src/main/resources/test-file.json";
+    private static final String FILE_NAME = "/Users/ammikhalev/code/univer/hackathon/rosbank-12-2019/src/main/resources/test-file.json";
 
     private static final AtomicInteger index = new AtomicInteger(0);
 
@@ -31,8 +31,8 @@ public class Utils {
     public static void createTransactionsFile() {
         List<Transaction> transactions = new ArrayList<>();
         Map<UUID, Client> clients = new HashMap<>();
-        Client client1 = createClient("a7bdcfbe-19a7-11ea-9927-0242ac110002", "Nikita", "Chernetsov");
-        Client client2 = createClient("Ilon", "Mask");
+        Client client1 = createClient("a7bdcfbe-19a7-11ea-9927-0242ac110002", "Artyom", "Mikhalev");
+        Client client2 = createClient("Elon", "Mask");
         clients.put(client1.getUuid(), client1);
         clients.put(client2.getUuid(), client2);
         for (int i = 0; i < 10; i++) {

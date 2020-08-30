@@ -21,7 +21,7 @@ VALUES (uuid_generate_v1(), 'Начисление бонусов на кажду
 
 -- Пример стратегии от организаторов:
 -- Здесь для примера: 1% на все покупки, 5% на 3 категории. Категории определяются по MCC
--- Или если сумма покупок 10000 руб, то платим 1% кэша, если сумма покупок >10000, то платим 2% кэша от этой суммы
+-- Или если сумма покупок 10000 руб, то платим 1% кэшбека, если сумма покупок >10000, то платим 2% кэшбека от этой суммы
 INSERT INTO strategies (id, title, type, settings, tariff_plan_id)
 VALUES (uuid_generate_v1(), '1% на все покупки', 'INSTANT',
         '{"intervals":[{"from":0.0,"to":null,"ratio":0.01,"amount":null}],"mcc_list":null,"min_bonus":null,"max_bonus":null}',
@@ -32,7 +32,7 @@ VALUES (uuid_generate_v1(), '1% на все покупки', 'INSTANT',
 
 -- Добавляем клиента и привязываем его к тарифному плану
 INSERT INTO clients (id, first_name, last_name, tariff_plan_id)
-VALUES (uuid_generate_v1(), 'Nikita', 'Chernetsov',
+VALUES (uuid_generate_v1(), 'Artyom', 'Mikhalev',
         (SELECT id FROM tariff_plans tp WHERE tp.title = 'Тестовый тарифный план'));
 
 INSERT INTO clients (id, first_name, last_name, tariff_plan_id)

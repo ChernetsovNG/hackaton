@@ -106,4 +106,9 @@ public class StrategyService {
         StrategyEntity updatedEntity = strategyRepository.save(strategyEntity);
         return updatedEntity.toDomain();
     }
+
+    @Transactional
+    public void deleteById(final UUID uuid) {
+        strategyRepository.deleteById(uuid);
+    }
 }

@@ -42,6 +42,12 @@ public class StrategyController {
         return strategyService.update(strategy);
     }
 
+    @PutMapping("/{id}/delete")
+    public ResponseEntity<?> delete(@PathVariable("id") UUID uuid) {
+        strategyService.deleteById(uuid);
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/link")
     public ResponseEntity<?> linkStrategyToTariffPlan(@RequestParam("strategyId") UUID strategyId,
                                                       @RequestParam("tariffPlanId") UUID tariffPlanId) {
